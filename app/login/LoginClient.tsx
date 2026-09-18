@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Props {
   error?: string
@@ -43,8 +44,11 @@ export default function LoginClient({ error: initialError, redirectTo = '/dashbo
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      <Link href="/" className="mb-8 text-2xl font-extrabold text-teal-600 tracking-tight">
-        Optio<span className="text-gray-900">Menu</span>
+      <Link href="/" className="mb-8 flex flex-col items-center gap-2">
+        <Image src="/logo.png" alt="Optio Menu" width={64} height={64} className="rounded-2xl" />
+        <span className="text-2xl font-extrabold tracking-tight">
+          <span className="text-teal-600">Optio</span><span className="text-gray-900">Menu</span>
+        </span>
       </Link>
 
       <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-100 shadow-sm p-8">

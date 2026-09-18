@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function HomePage() {
   return (
@@ -7,7 +8,8 @@ export default function HomePage() {
       {/* ── Nav ─────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <span className="font-extrabold text-xl tracking-tight">
+          <span className="font-extrabold text-xl tracking-tight flex items-center gap-2">
+            <Image src="/logo.png" alt="Optio Menu" width={32} height={32} className="rounded-lg" />
             <span className="text-teal-600">Optio</span>Menu
           </span>
           <div className="flex items-center gap-3">

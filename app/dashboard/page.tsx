@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import type { BusinessWithType } from '@/types/database'
 
 export default async function DashboardPage() {
@@ -18,8 +19,9 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="font-extrabold text-xl text-teal-600 tracking-tight">
-            Optio<span className="text-gray-900">Menu</span>
+          <Link href="/" className="font-extrabold text-xl text-teal-600 tracking-tight flex items-center gap-2">
+            <Image src="/logo.png" alt="Optio Menu" width={32} height={32} className="rounded-lg" />
+            <span className="text-teal-600">Optio</span><span className="text-gray-900">Menu</span>
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>
