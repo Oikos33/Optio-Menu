@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { FullBusiness } from '@/types/database'
@@ -13,25 +14,26 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
-  const { data: business } = await supabase
+  // Use public (cookie-free) client — generateMetadata may also run at build time
+  const supabase = createPublicClient()
+  const { data: business } = await (supabase as any)
     .from('businesses')
     .select('name, description')
     .eq('slug', slug)
     .eq('is_active', true)
-    .single() as any
+    .single() as { data: { name: string; description: string | null } | null }
 
-  if (!business?.data) return { title: 'Menu Not Found' }
-  const b = business.data
+  if (!business) return { title: 'Menu Not Found' }
 
   return {
-    title: `${b.name} — Optio Menu`,
-    description: b.description || `View the menu for ${b.name}`,
+    title: `${business.name} — Optio Menu`,
+    description: business.description || `View the menu for ${business.name}`,
   }
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
+  // MUST use cookie-free client — no HTTP request exists at build time
+  const supabase = createPublicClient()
   const { data: businesses } = await supabase
     .from('businesses')
     .select('slug')
@@ -42,6 +44,7 @@ export async function generateStaticParams() {
 
 export default async function MenuPage({ params }: Props) {
   const { slug } = await params
+  // At request time, use the cookie-based server client for auth context
   const supabase = await createClient()
 
   // Fetch business with sections, items, and comments in one go
