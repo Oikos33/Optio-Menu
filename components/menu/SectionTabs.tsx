@@ -26,8 +26,8 @@ export default function SectionTabs({ sections, hasUnsectioned, locale, activeSe
           onClick={() => scrollTo(section.id)}
           className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors
             ${activeSection === section.id
-              ? 'bg-indigo-600 text-white'
-              : 'bg-white text-gray-600 border border-gray-200 hover:border-indigo-300'
+              ? 'bg-teal-600 text-white'
+              : 'bg-white text-gray-600 border border-gray-200 hover:border-teal-300'
             }`}
         >
           {getTranslation(section.name, locale)}
@@ -38,8 +38,8 @@ export default function SectionTabs({ sections, hasUnsectioned, locale, activeSe
           onClick={() => scrollTo(null)}
           className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors
             ${activeSection === null && sections.length > 0
-              ? 'bg-indigo-600 text-white'
-              : 'bg-white text-gray-600 border border-gray-200 hover:border-indigo-300'
+              ? 'bg-teal-600 text-white'
+              : 'bg-white text-gray-600 border border-gray-200 hover:border-teal-300'
             }`}
         >
           Other

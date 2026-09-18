@@ -43,7 +43,7 @@ export default function LoginClient({ error: initialError, redirectTo = '/dashbo
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-      <Link href="/" className="mb-8 text-2xl font-extrabold text-indigo-600 tracking-tight">
+      <Link href="/" className="mb-8 text-2xl font-extrabold text-teal-600 tracking-tight">
         Optio<span className="text-gray-900">Menu</span>
       </Link>
 
@@ -85,23 +85,23 @@ export default function LoginClient({ error: initialError, redirectTo = '/dashbo
             <input
               type="email" required
               value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
             />
           </div>
           <div>
             <div className="flex items-center justify-between mb-1">
               <label className="block text-sm font-medium text-gray-700">Password</label>
-              <Link href="/forgot-password" className="text-xs text-indigo-600 hover:underline">Forgot?</Link>
+              <Link href="/forgot-password" className="text-xs text-teal-600 hover:underline">Forgot?</Link>
             </div>
             <input
               type="password" required
               value={password} onChange={e => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
             />
           </div>
           <button
             type="submit" disabled={loading}
-            className="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+            className="w-full bg-teal-600 text-white font-semibold py-2.5 rounded-xl hover:bg-teal-700 disabled:opacity-50 transition-colors"
           >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
@@ -109,7 +109,7 @@ export default function LoginClient({ error: initialError, redirectTo = '/dashbo
 
         <p className="mt-5 text-center text-sm text-gray-500">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-indigo-600 font-medium hover:underline">
+          <Link href="/register" className="text-teal-600 font-medium hover:underline">
             Sign up free
           </Link>
         </p>

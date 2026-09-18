@@ -94,7 +94,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
           type="text" required maxLength={255}
           value={name} onChange={e => handleNameChange(e.target.value)}
           placeholder="e.g. Sunset Café"
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
@@ -109,7 +109,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
           value={slug}
           onChange={e => { setSlug(slugify(e.target.value)); setSlugEdited(true) }}
           placeholder="sunset-cafe"
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
@@ -119,7 +119,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
         <select
           value={businessTypeId}
           onChange={e => setBusinessTypeId(e.target.value)}
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         >
           <option value="">Select type…</option>
           {businessTypes.map(t => (
@@ -137,7 +137,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
           rows={2} maxLength={2000}
           value={description} onChange={e => setDescription(e.target.value)}
           placeholder="A short description of your restaurant…"
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300 resize-none"
         />
       </div>
 
@@ -148,7 +148,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
           type="text" maxLength={500}
           value={address} onChange={e => setAddress(e.target.value)}
           placeholder="1-1-1 Shibuya, Tokyo"
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
@@ -162,7 +162,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
               className="text-sm text-red-400 hover:text-red-600">Remove</button>
           </div>
         ) : (
-          <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-indigo-300 transition-colors">
+          <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-teal-300 transition-colors">
             <span className="text-2xl">📷</span>
             <span className="text-sm text-gray-500">Click to upload logo</span>
             <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
@@ -173,7 +173,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
       <div className="pt-2">
         <button
           type="submit" disabled={saving}
-          className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="w-full bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 disabled:opacity-50 transition-colors"
         >
           {saving ? 'Creating…' : 'Create restaurant'}
         </button>

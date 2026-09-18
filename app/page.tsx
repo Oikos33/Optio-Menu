@@ -8,7 +8,7 @@ export default function HomePage() {
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <span className="font-extrabold text-xl tracking-tight">
-            <span className="text-indigo-600">Optio</span>Menu
+            <span className="text-teal-600">Optio</span>Menu
           </span>
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-sm text-gray-500 hover:text-gray-900">
@@ -16,7 +16,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/login"
-              className="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors"
+              className="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-700 transition-colors"
             >
               Get started free
             </Link>
@@ -26,12 +26,12 @@ export default function HomePage() {
 
       {/* ── Hero ────────────────────────────────────────────── */}
       <section className="max-w-4xl mx-auto px-4 pt-20 pb-16 text-center">
-        <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
+        <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
           ✨ Free forever — no credit card required
         </div>
         <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight leading-tight mb-6">
           Your restaurant menu,<br />
-          <span className="text-indigo-600">one QR scan away</span>
+          <span className="text-teal-600">one QR scan away</span>
         </h1>
         <p className="text-xl text-gray-500 max-w-2xl mx-auto mb-10">
           Create a beautiful digital menu in minutes. Share it with a QR code.
@@ -40,7 +40,7 @@ export default function HomePage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/login"
-            className="bg-indigo-600 text-white font-bold px-8 py-4 rounded-2xl text-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            className="bg-teal-600 text-white font-bold px-8 py-4 rounded-2xl text-lg hover:bg-teal-700 transition-colors shadow-lg shadow-teal-200"
           >
             Create your menu →
           </Link>
@@ -55,10 +55,10 @@ export default function HomePage() {
 
       {/* ── Mock preview ────────────────────────────────────── */}
       <section className="max-w-3xl mx-auto px-4 pb-20">
-        <div className="bg-gradient-to-b from-indigo-50 to-white rounded-3xl border border-indigo-100 p-6 text-center shadow-xl shadow-indigo-100">
+        <div className="bg-gradient-to-b from-teal-50 to-white rounded-3xl border border-teal-100 p-6 text-center shadow-xl shadow-teal-100">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 max-w-sm mx-auto">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-xl">S</div>
+              <div className="w-12 h-12 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold text-xl">S</div>
               <div className="text-left">
                 <p className="font-bold text-gray-900">Sunset Café</p>
                 <p className="text-xs text-gray-400">Japanese · Shibuya, Tokyo</p>
@@ -73,7 +73,7 @@ export default function HomePage() {
                 <div key={item.name} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50">
                   <span className="text-xl">{item.emoji}</span>
                   <span className="flex-1 text-sm font-medium text-gray-900 text-left">{item.name}</span>
-                  <span className="text-sm font-bold text-indigo-600">{item.price}</span>
+                  <span className="text-sm font-bold text-teal-600">{item.price}</span>
                   <span className="text-gray-300">♡</span>
                 </div>
               ))}
@@ -117,7 +117,7 @@ export default function HomePage() {
               { step: '3', title: 'Share your QR code', desc: 'Download and print your QR code. Guests scan it to see your menu instantly.' },
             ].map(s => (
               <div key={s.step} className="flex items-start gap-5 text-left bg-gray-50 rounded-2xl p-6">
-                <div className="w-10 h-10 rounded-full bg-indigo-600 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-teal-600 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0">
                   {s.step}
                 </div>
                 <div>
@@ -131,15 +131,15 @@ export default function HomePage() {
       </section>
 
       {/* ── CTA ─────────────────────────────────────────────── */}
-      <section className="bg-indigo-600 py-20 text-center text-white">
+      <section className="bg-teal-600 py-20 text-center text-white">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-4xl font-extrabold mb-4">Ready to go digital?</h2>
-          <p className="text-indigo-200 text-lg mb-8">
+          <p className="text-teal-200 text-lg mb-8">
             Join restaurants already using Optio Menu. Free forever.
           </p>
           <Link
             href="/login"
-            className="inline-block bg-white text-indigo-700 font-bold px-10 py-4 rounded-2xl text-lg hover:bg-indigo-50 transition-colors shadow-lg"
+            className="inline-block bg-white text-teal-700 font-bold px-10 py-4 rounded-2xl text-lg hover:bg-teal-50 transition-colors shadow-lg"
           >
             Create your free menu →
           </Link>

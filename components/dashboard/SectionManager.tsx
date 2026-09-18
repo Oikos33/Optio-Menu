@@ -35,7 +35,7 @@ export default function SectionManager({ businessId, sections }: Props) {
     <div className="relative">
       <button
         onClick={() => setOpen(v => !v)}
-        className="text-sm text-gray-500 border border-gray-200 px-3 py-1.5 rounded-xl hover:border-indigo-300 hover:text-indigo-600 transition-colors"
+        className="text-sm text-gray-500 border border-gray-200 px-3 py-1.5 rounded-xl hover:border-teal-300 hover:text-teal-600 transition-colors"
       >
         + Section
       </button>
@@ -49,13 +49,13 @@ export default function SectionManager({ businessId, sections }: Props) {
               onChange={e => setName(e.target.value)}
               placeholder="e.g. Starters"
               autoFocus
-              className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              className="w-full rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-200"
             />
             <div className="flex gap-2">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 bg-indigo-600 text-white text-xs font-semibold py-1.5 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+                className="flex-1 bg-teal-600 text-white text-xs font-semibold py-1.5 rounded-lg hover:bg-teal-700 disabled:opacity-50"
               >
                 {saving ? 'Adding…' : 'Add'}
               </button>

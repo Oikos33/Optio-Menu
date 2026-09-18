@@ -94,7 +94,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
             >✕</button>
           </div>
         ) : (
-          <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-8 cursor-pointer hover:border-indigo-300 transition-colors">
+          <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-8 cursor-pointer hover:border-teal-300 transition-colors">
             <span className="text-3xl">📷</span>
             <span className="text-sm text-gray-500">Click to upload a photo</span>
             <span className="text-xs text-gray-400">JPG, PNG, WebP · Max 5MB</span>
@@ -110,7 +110,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
           type="text" required maxLength={255}
           value={name} onChange={e => setName(e.target.value)}
           placeholder="e.g. Margherita Pizza"
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
@@ -121,7 +121,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
           rows={2} maxLength={2000}
           value={description} onChange={e => setDescription(e.target.value)}
           placeholder="Ingredients, allergens, notes…"
-          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 resize-none"
+          className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300 resize-none"
         />
       </div>
 
@@ -133,7 +133,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
             type="number" step="0.01" min="0" max="99999"
             value={price} onChange={e => setPrice(e.target.value)}
             placeholder="0.00"
-            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
           />
         </div>
         {sections.length > 0 && (
@@ -141,7 +141,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
             <label className="block text-sm font-medium text-gray-700 mb-1">Section</label>
             <select
               value={sectionId} onChange={e => setSectionId(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
             >
               <option value="">No section</option>
               {sections.map(s => (
@@ -157,7 +157,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
       <div className="pt-2">
         <button
           type="submit" disabled={saving}
-          className="w-full bg-indigo-600 text-white font-semibold py-3 rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="w-full bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 disabled:opacity-50 transition-colors"
         >
           {saving ? (uploadProgress > 0 ? `Uploading… ${uploadProgress}%` : 'Saving…') : 'Add to menu'}
         </button>

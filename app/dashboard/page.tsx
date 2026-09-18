@@ -18,7 +18,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="font-extrabold text-xl text-indigo-600 tracking-tight">
+          <Link href="/" className="font-extrabold text-xl text-teal-600 tracking-tight">
             Optio<span className="text-gray-900">Menu</span>
           </Link>
           <div className="flex items-center gap-3">
@@ -40,7 +40,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/dashboard/businesses/new"
-            className="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors"
+            className="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-700 transition-colors"
           >
             + New restaurant
           </Link>
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
             <p className="text-sm text-gray-500 mb-4">Create your first restaurant to get started</p>
             <Link
               href="/dashboard/businesses/new"
-              className="inline-block bg-indigo-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-indigo-700"
+              className="inline-block bg-teal-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-teal-700"
             >
               Create restaurant
             </Link>
@@ -64,7 +64,7 @@ export default async function DashboardPage() {
               <Link
                 key={biz.id}
                 href={`/dashboard/businesses/${biz.id}`}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:border-indigo-200 hover:shadow-md transition-all group"
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:border-teal-200 hover:shadow-md transition-all group"
               >
                 <div className="flex items-start gap-3">
                   {biz.logo_path ? (
@@ -74,12 +74,12 @@ export default async function DashboardPage() {
                       className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0 text-indigo-600 text-xl font-bold">
+                    <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center flex-shrink-0 text-teal-600 text-xl font-bold">
                       {biz.name[0]}
                     </div>
                   )}
                   <div className="min-w-0">
-                    <h3 className="font-bold text-gray-900 group-hover:text-indigo-600 transition-colors truncate">
+                    <h3 className="font-bold text-gray-900 group-hover:text-teal-600 transition-colors truncate">
                       {biz.name}
                     </h3>
                     <p className="text-xs text-gray-400 mt-0.5">/menu/{biz.slug}</p>
@@ -93,7 +93,7 @@ export default async function DashboardPage() {
                       </span>
                     </div>
                   </div>
-                  <svg className="w-4 h-4 text-gray-300 group-hover:text-indigo-400 ml-auto mt-1 flex-shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-gray-300 group-hover:text-teal-400 ml-auto mt-1 flex-shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>

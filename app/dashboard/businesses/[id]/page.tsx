@@ -61,7 +61,7 @@ export default async function BusinessManagePage({ params }: Props) {
             <a
               href={`/menu/${business.slug}`}
               target="_blank"
-              className="text-sm text-gray-500 hover:text-indigo-600 border border-gray-200 px-3 py-1.5 rounded-lg"
+              className="text-sm text-gray-500 hover:text-teal-600 border border-gray-200 px-3 py-1.5 rounded-lg"
             >
               Preview ↗
             </a>
@@ -179,12 +179,12 @@ function ItemRow({ item, businessId }: { item: any; businessId: string }) {
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900 truncate">{item.name?.en || 'Untitled'}</p>
         {item.price != null && (
-          <p className="text-xs text-indigo-600 font-semibold">{Number(item.price).toFixed(2)}</p>
+          <p className="text-xs text-teal-600 font-semibold">{Number(item.price).toFixed(2)}</p>
         )}
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
         <Link href={`/dashboard/items/${item.id}/edit`}
-          className="text-xs text-gray-500 hover:text-indigo-600 font-medium">Edit</Link>
+          className="text-xs text-gray-500 hover:text-teal-600 font-medium">Edit</Link>
         <form action={`/api/items/${item.id}/delete`} method="POST">
           <button className="text-xs text-red-400 hover:text-red-600 font-medium">Delete</button>
         </form>

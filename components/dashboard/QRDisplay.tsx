@@ -35,7 +35,7 @@ export default function QRDisplay({ slug, appUrl }: Props) {
       </div>
       <button
         onClick={download}
-        className="w-full bg-indigo-600 text-white text-sm font-semibold py-2 rounded-xl hover:bg-indigo-700 transition-colors mb-2"
+        className="w-full bg-teal-600 text-white text-sm font-semibold py-2 rounded-xl hover:bg-teal-700 transition-colors mb-2"
       >
         ⬇ Download PNG
       </button>

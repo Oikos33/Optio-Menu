@@ -74,7 +74,7 @@ export default function MenuPageClient({ business }: Props) {
                     key={code}
                     onClick={() => { setLocale(code); setLangOpen(false) }}
                     className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                      locale === code ? 'font-semibold text-indigo-600' : 'text-gray-700'
+                      locale === code ? 'font-semibold text-teal-600' : 'text-gray-700'
                     }`}
                   >
                     {label}
@@ -189,7 +189,7 @@ export default function MenuPageClient({ business }: Props) {
 
         <p className="text-center text-xs text-gray-400 mt-6">
           Powered by{' '}
-          <a href="/" className="text-indigo-500 hover:underline">Optio Menu</a>
+          <a href="/" className="text-teal-500 hover:underline">Optio Menu</a>
           {' '}· Free QR menus
         </p>
       </main>
@@ -283,7 +283,7 @@ function ItemCard({ item, locale, supabase }: {
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-gray-900 text-sm leading-snug">{name}</h3>
           {price && (
-            <span className="flex-shrink-0 text-sm font-bold text-indigo-600">{price}</span>
+            <span className="flex-shrink-0 text-sm font-bold text-teal-600">{price}</span>
           )}
         </div>
         {description && (
@@ -293,7 +293,7 @@ function ItemCard({ item, locale, supabase }: {
         {/* Comment toggle */}
         <button
           onClick={() => setShowComments(v => !v)}
-          className="mt-2 flex items-center gap-1.5 text-xs text-gray-400 hover:text-indigo-500 transition-colors"
+          className="mt-2 flex items-center gap-1.5 text-xs text-gray-400 hover:text-teal-500 transition-colors"
         >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -336,18 +336,18 @@ function ItemCard({ item, locale, supabase }: {
                   onChange={e => setCommentBody(e.target.value)}
                   placeholder="Write a comment…"
                   maxLength={1000}
-                  className="flex-1 text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  className="flex-1 text-xs border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-200"
                 />
                 <button
                   type="submit"
                   disabled={submitting || !commentBody.trim()}
-                  className="text-xs bg-indigo-600 text-white rounded-lg px-3 py-1.5 hover:bg-indigo-700 disabled:opacity-50"
+                  className="text-xs bg-teal-600 text-white rounded-lg px-3 py-1.5 hover:bg-teal-700 disabled:opacity-50"
                 >
                   Post
                 </button>
               </form>
             ) : (
-              <a href="/login" className="block text-xs text-center text-indigo-500 hover:underline mt-2">
+              <a href="/login" className="block text-xs text-center text-teal-500 hover:underline mt-2">
                 Sign in to comment
               </a>
             )}
