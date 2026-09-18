@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
 
 const geist = Geist({ subsets: ['latin'] })
@@ -20,6 +21,10 @@ export default function RootLayout({
       <body className={`${geist.className} antialiased bg-gray-50`}>
         {children}
       </body>
+      {/* Google Analytics — only loads in production when GA_ID is set */}
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   )
 }
