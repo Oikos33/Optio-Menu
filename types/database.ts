@@ -163,6 +163,38 @@ export type Database = {
         }
         Update: never
       }
+      tables: {
+        Row: {
+          id: string
+          business_id: string
+          name: string
+          token: string
+          capacity: number | null
+          section: string | null
+          status: 'available' | 'occupied' | 'reserved' | 'needs_cleaning'
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          business_id: string
+          name: string
+          token?: string
+          capacity?: number | null
+          section?: string | null
+          status?: 'available' | 'occupied' | 'reserved' | 'needs_cleaning'
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          capacity?: number | null
+          section?: string | null
+          status?: 'available' | 'occupied' | 'reserved' | 'needs_cleaning'
+          is_active?: boolean
+        }
+      }
     }
     Views: Record<string, never>
     Functions: {
@@ -181,6 +213,7 @@ export type MenuItem = Database['public']['Tables']['menu_items']['Row']
 export type MenuSection = Database['public']['Tables']['menu_sections']['Row']
 export type MenuItemComment = Database['public']['Tables']['menu_item_comments']['Row']
 export type BusinessType = Database['public']['Tables']['business_types']['Row']
+export type Table = Database['public']['Tables']['tables']['Row']
 
 // Translatable JSONB helper
 export type TranslatableText = {

@@ -76,6 +76,22 @@ export default async function BusinessManagePage({ params }: Props) {
             </Link>
           </div>
         </div>
+
+        {/* Tab navigation */}
+        <div className="max-w-5xl mx-auto px-4 flex gap-1 pb-0 -mb-px">
+          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600">
+            {t('tabMenu')}
+          </span>
+          <Link
+            href={`/dashboard/businesses/${id}/tables`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors"
+          >
+            {t('tabTables')}
+          </Link>
+          <span className="text-sm text-gray-300 px-4 py-2 cursor-default">
+            {t('tabOrders')} <span className="text-xs">⏳</span>
+          </span>
+        </div>
       </header>
 
       <div className="max-w-5xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-3 gap-6">

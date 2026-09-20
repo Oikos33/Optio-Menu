@@ -28,7 +28,7 @@ export default function QRDisplay({ slug, appUrl }: Props) {
         <QRCodeCanvas
           value={menuUrl}
           size={160}
-          fgColor="#1e1b4b"
+          fgColor="#0d9488"
           level="M"
           includeMargin
         />
