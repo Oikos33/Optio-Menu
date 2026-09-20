@@ -35,14 +35,8 @@ export function getImageUrl(
   options: { width?: number; height?: number; quality?: number } = {}
 ): string {
   if (!path) return '/placeholder-dish.webp'
-  const { width = 500, quality = 80 } = options
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const params = new URLSearchParams({
-    width: String(width),
-    quality: String(quality),
-    format: 'webp',
-  })
-  return `${base}/storage/v1/render/image/public/${path}?${params}`
+  return `${base}/storage/v1/object/public/${path}`
 }
 
 /**
