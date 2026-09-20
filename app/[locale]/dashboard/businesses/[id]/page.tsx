@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
 import { getImageUrl } from '@/lib/utils'
 import QRDisplay from '@/components/dashboard/QRDisplay'
 import AddItemButton from '@/components/dashboard/AddItemButton'
 import SectionManager from '@/components/dashboard/SectionManager'
+import { getTranslations } from 'next-intl/server'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -16,6 +17,8 @@ export default async function BusinessManagePage({ params }: Props) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
+
+  const t = await getTranslations('BusinessPage')
 
   // Fetch business with sections + items
   const { data: business } = await (supabase as any)
@@ -63,13 +66,13 @@ export default async function BusinessManagePage({ params }: Props) {
               target="_blank"
               className="text-sm text-gray-500 hover:text-teal-600 border border-gray-200 px-3 py-1.5 rounded-lg"
             >
-              Preview ↗
+              {t('preview')}
             </a>
             <Link
               href={`/dashboard/businesses/${id}/edit`}
               className="text-sm text-gray-500 hover:text-gray-700 border border-gray-200 px-3 py-1.5 rounded-lg"
             >
-              Edit
+              {t('edit')}
             </Link>
           </div>
         </div>
@@ -80,7 +83,7 @@ export default async function BusinessManagePage({ params }: Props) {
         {/* ── LEFT: Menu ──────────────────────────────── */}
         <div className="lg:col-span-2 space-y-5">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-gray-800">Menu Items</h2>
+            <h2 className="font-semibold text-gray-800">{t('menuItems')}</h2>
             <div className="flex gap-2">
               <SectionManager businessId={id} sections={business.menu_sections || []} />
               <AddItemButton businessId={id} />
@@ -94,19 +97,19 @@ export default async function BusinessManagePage({ params }: Props) {
                 <h3 className="font-semibold text-gray-700 text-sm">{section.name?.en || 'Section'}</h3>
                 <div className="flex gap-3">
                   <Link href={`/dashboard/sections/${section.id}/edit`}
-                    className="text-xs text-gray-400 hover:text-gray-700">Edit</Link>
+                    className="text-xs text-gray-400 hover:text-gray-700">{t('edit')}</Link>
                   <form action={`/api/sections/${section.id}/delete`} method="POST">
-                    <button className="text-xs text-red-400 hover:text-red-600">Delete</button>
+                    <button className="text-xs text-red-400 hover:text-red-600">{t('delete')}</button>
                   </form>
                 </div>
               </div>
               <div className="divide-y divide-gray-50">
                 {(section.menu_items || []).length === 0 ? (
-                  <p className="px-4 py-3 text-xs text-gray-400 italic">No items yet</p>
+                  <p className="px-4 py-3 text-xs text-gray-400 italic">{t('noItemsYet')}</p>
                 ) : (
                   (section.menu_items as any[])
                     .sort((a, b) => a.sort_order - b.sort_order)
-                    .map(item => <ItemRow key={item.id} item={item} businessId={id} />)
+                    .map(item => <ItemRow key={item.id} item={item} businessId={id} tEdit={t('edit')} tDelete={t('delete')} />)
                 )}
               </div>
             </div>
@@ -117,13 +120,13 @@ export default async function BusinessManagePage({ params }: Props) {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
                 <h3 className="font-semibold text-gray-700 text-sm">
-                  {business.menu_sections?.length > 0 ? 'Other Items' : 'Menu Items'}
+                  {business.menu_sections?.length > 0 ? t('otherItems') : t('menuItems')}
                 </h3>
               </div>
               <div className="divide-y divide-gray-50">
                 {unsectionedItems
                   .sort((a: any, b: any) => a.sort_order - b.sort_order)
-                  .map((item: any) => <ItemRow key={item.id} item={item} businessId={id} />)}
+                  .map((item: any) => <ItemRow key={item.id} item={item} businessId={id} tEdit={t('edit')} tDelete={t('delete')} />)}
               </div>
             </div>
           )}
@@ -131,7 +134,7 @@ export default async function BusinessManagePage({ params }: Props) {
           {business.menu_sections?.length === 0 && unsectionedItems.length === 0 && (
             <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-gray-200">
               <p className="text-3xl mb-2">🍕</p>
-              <p className="text-sm text-gray-500 mb-3">Add your first menu item</p>
+              <p className="text-sm text-gray-500 mb-3">{t('addFirstItem')}</p>
               <AddItemButton businessId={id} primary />
             </div>
           )}
@@ -142,16 +145,16 @@ export default async function BusinessManagePage({ params }: Props) {
           <QRDisplay slug={business.slug} appUrl={appUrl} />
 
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-sm space-y-2">
-            <h3 className="font-semibold text-gray-700 mb-2">Details</h3>
+            <h3 className="font-semibold text-gray-700 mb-2">{t('details')}</h3>
             <div className="flex justify-between text-gray-600">
-              <span className="text-gray-400">Status</span>
+              <span className="text-gray-400">{t('status')}</span>
               <span className={business.is_active ? 'text-green-600 font-medium' : 'text-yellow-600 font-medium'}>
-                {business.is_active ? 'Active' : 'Inactive'}
+                {business.is_active ? t('active') : t('inactive')}
               </span>
             </div>
             {business.address && (
               <div className="flex justify-between text-gray-600">
-                <span className="text-gray-400">Address</span>
+                <span className="text-gray-400">{t('address')}</span>
                 <span className="text-right text-xs max-w-[60%]">{business.address}</span>
               </div>
             )}
@@ -162,7 +165,7 @@ export default async function BusinessManagePage({ params }: Props) {
   )
 }
 
-function ItemRow({ item, businessId }: { item: any; businessId: string }) {
+function ItemRow({ item, businessId, tEdit, tDelete }: { item: any; businessId: string; tEdit: string; tDelete: string }) {
   return (
     <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50">
       <div className="w-11 h-11 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
@@ -184,9 +187,9 @@ function ItemRow({ item, businessId }: { item: any; businessId: string }) {
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
         <Link href={`/dashboard/items/${item.id}/edit`}
-          className="text-xs text-gray-500 hover:text-teal-600 font-medium">Edit</Link>
+          className="text-xs text-gray-500 hover:text-teal-600 font-medium">{tEdit}</Link>
         <form action={`/api/items/${item.id}/delete`} method="POST">
-          <button className="text-xs text-red-400 hover:text-red-600 font-medium">Delete</button>
+          <button className="text-xs text-red-400 hover:text-red-600 font-medium">{tDelete}</button>
         </form>
       </div>
     </div>

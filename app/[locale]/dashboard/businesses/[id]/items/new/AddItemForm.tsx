@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { getTranslation } from '@/lib/utils'
 import type { MenuSection } from '@/types/database'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   businessId: string
@@ -15,6 +16,7 @@ interface Props {
 export default function AddItemForm({ businessId, userId, sections }: Props) {
   const router = useRouter()
   const supabase = createClient()
+  const t = useTranslations('AddItemForm')
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
@@ -69,7 +71,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
       router.push(`/dashboard/businesses/${businessId}`)
       router.refresh()
     } catch (err: any) {
-      setError(err.message || 'Something went wrong')
+      setError(err.message || t('somethingWentWrong'))
       setSaving(false)
     }
   }
@@ -82,7 +84,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
 
       {/* Image upload */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Photo</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('photo')}</label>
         {imagePreview ? (
           <div className="relative">
             <img src={imagePreview} alt="Preview"
@@ -96,8 +98,8 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
         ) : (
           <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-8 cursor-pointer hover:border-teal-300 transition-colors">
             <span className="text-3xl">📷</span>
-            <span className="text-sm text-gray-500">Click to upload a photo</span>
-            <span className="text-xs text-gray-400">JPG, PNG, WebP · Max 5MB</span>
+            <span className="text-sm text-gray-500">{t('clickToUploadPhoto')}</span>
+            <span className="text-xs text-gray-400">{t('photoHint')}</span>
             <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
           </label>
         )}
@@ -105,22 +107,22 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
 
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Item name *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('itemName')}</label>
         <input
           type="text" required maxLength={255}
           value={name} onChange={e => setName(e.target.value)}
-          placeholder="e.g. Margherita Pizza"
+          placeholder={t('itemNamePlaceholder')}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('description')}</label>
         <textarea
           rows={2} maxLength={2000}
           value={description} onChange={e => setDescription(e.target.value)}
-          placeholder="Ingredients, allergens, notes…"
+          placeholder={t('descriptionPlaceholder')}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300 resize-none"
         />
       </div>
@@ -128,7 +130,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
       {/* Price + Section */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Price (optional)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('price')}</label>
           <input
             type="number" step="0.01" min="0" max="99999"
             value={price} onChange={e => setPrice(e.target.value)}
@@ -138,12 +140,12 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
         </div>
         {sections.length > 0 && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Section</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('section')}</label>
             <select
               value={sectionId} onChange={e => setSectionId(e.target.value)}
               className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
             >
-              <option value="">No section</option>
+              <option value="">{t('noSection')}</option>
               {sections.map(s => (
                 <option key={s.id} value={s.id}>
                   {getTranslation(s.name, 'en')}
@@ -159,7 +161,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
           type="submit" disabled={saving}
           className="w-full bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 disabled:opacity-50 transition-colors"
         >
-          {saving ? (uploadProgress > 0 ? `Uploading… ${uploadProgress}%` : 'Saving…') : 'Add to menu'}
+          {saving ? (uploadProgress > 0 ? t('uploading', { progress: uploadProgress }) : t('saving')) : t('addToMenu')}
         </button>
       </div>
     </form>

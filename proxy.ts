@@ -1,12 +1,8 @@
-import { type NextRequest } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
+import createMiddleware from 'next-intl/middleware'
+import { routing } from './i18n/routing'
 
-export async function proxy(request: NextRequest) {
-  return await updateSession(request)
-}
+export default createMiddleware(routing)
 
-export const proxyConfig = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+export const config = {
+  matcher: ['/((?!api|auth|trpc|_next|_vercel|.*\\..*).*)'],
 }

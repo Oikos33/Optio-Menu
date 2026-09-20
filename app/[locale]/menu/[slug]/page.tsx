@@ -9,11 +9,12 @@ import MenuPageClient from '@/components/menu/MenuPageClient'
 export const revalidate = 60
 
 interface Props {
-  params: Promise<{ slug: string }>
+  params: Promise<{ locale: string; slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return { title: 'Menu Not Found' }
   // Use public (cookie-free) client — generateMetadata may also run at build time
   const supabase = createPublicClient()
   const { data: business } = await (supabase as any)
@@ -32,6 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
+  // Return empty array when env vars are missing (local dev without .env.local)
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return []
   // MUST use cookie-free client — no HTTP request exists at build time
   const supabase = createPublicClient()
   const { data: businesses } = await supabase

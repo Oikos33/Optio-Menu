@@ -1,0 +1,212 @@
+{
+  "Metadata": {
+    "title": "Optio Menu — レストラン向け無料QRメニュー",
+    "description": "美しいデジタルメニューをレストランに。永久無料。即時QRコード発行。"
+  },
+  "HomePage": {
+    "nav": {
+      "signIn": "サインイン",
+      "getStartedFree": "無料で始める"
+    },
+    "hero": {
+      "badge": "✨ 永久無料 — クレジットカード不要",
+      "title": "あなたのレストランのメニューを、",
+      "titleHighlight": "QRコード一枚で",
+      "subtitle": "数分で美しいデジタルメニューを作成。QRコードでシェア。ゲストが料理を閲覧・お気に入り登録・コメント投稿 — すべて無料。",
+      "ctaPrimary": "メニューを作成 →",
+      "ctaSecondary": "使い方を見る"
+    },
+    "preview": {
+      "mockRestaurantName": "Sunset Café",
+      "mockRestaurantType": "和食 · 渋谷、東京",
+      "caption": "あなたのメニューはどんなスマートフォンでもこのように表示されます"
+    },
+    "features": {
+      "heading": "必要な機能がすべて揃っています。",
+      "items": {
+        "qr": {
+          "title": "即時QRコード",
+          "desc": "各メニューに固有のQRコードが発行されます。ダウンロードして印刷し、テーブルに貼るだけ。"
+        },
+        "languages": {
+          "title": "15言語対応",
+          "desc": "メニューが外国人ゲスト向けに自動翻訳されます。追加作業は不要です。"
+        },
+        "comments": {
+          "title": "ゲストコメント",
+          "desc": "ゲストがリアルタイムで料理にコメントを投稿できます。各アイテムの組み込みレビューシステムのようなもの。"
+        },
+        "favorites": {
+          "title": "お気に入り料理",
+          "desc": "サインイン済みのゲストはお気に入りの料理を保存して、次回の注文の参考にできます。"
+        },
+        "photos": {
+          "title": "フォトメニュー",
+          "desc": "各料理に写真をアップロード。どのデバイスでも美しく表示されます。"
+        },
+        "updates": {
+          "title": "即時更新",
+          "desc": "価格変更・アイテム追加・提供状況の切り替え — 60秒以内にライブ反映されます。"
+        }
+      }
+    },
+    "howItWorks": {
+      "heading": "3ステップで始められます",
+      "steps": {
+        "step1": {
+          "title": "レストランを作成",
+          "desc": "無料でサインアップし、名前・住所を入力してロゴをアップロードするだけ。"
+        },
+        "step2": {
+          "title": "メニューアイテムを追加",
+          "desc": "写真・説明・価格を設定して料理を追加。セクションで整理できます。"
+        },
+        "step3": {
+          "title": "QRコードをシェア",
+          "desc": "QRコードをダウンロードして印刷。ゲストがスキャンするとすぐにメニューが表示されます。"
+        }
+      }
+    },
+    "cta": {
+      "heading": "デジタル化の準備はできましたか？",
+      "subtitle": "Optio Menu を使っているレストランに仲間入りしましょう。永久無料。",
+      "button": "無料メニューを作成 →"
+    },
+    "footer": {
+      "copyright": "© {year} Optio Menu",
+      "email": "hello@optio-menu.ai",
+      "privacyPolicy": "プライバシーポリシー",
+      "termsOfService": "利用規約"
+    }
+  },
+  "LoginPage": {
+    "title": "サインイン",
+    "continueWithGoogle": "Googleで続ける",
+    "orWithEmail": "またはメールで",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "forgotPassword": "忘れた場合",
+    "signingIn": "サインイン中…",
+    "signIn": "サインイン",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "signUpFree": "無料で登録"
+  },
+  "DashboardPage": {
+    "myMenus": "マイメニュー",
+    "restaurantCount": "{count} 店舗",
+    "restaurantCountPlural": "{count} 店舗",
+    "newRestaurant": "+ 新しいレストラン",
+    "signOut": "サインアウト",
+    "empty": {
+      "heading": "メニューがまだありません",
+      "subtitle": "最初のレストランを作成して始めましょう",
+      "cta": "レストランを作成"
+    },
+    "status": {
+      "active": "公開中",
+      "inactive": "非公開"
+    }
+  },
+  "BusinessPage": {
+    "preview": "プレビュー ↗",
+    "edit": "編集",
+    "menuItems": "メニューアイテム",
+    "noItemsYet": "アイテムがまだありません",
+    "addFirstItem": "最初のメニューアイテムを追加",
+    "otherItems": "その他のアイテム",
+    "details": "詳細",
+    "status": "ステータス",
+    "address": "住所",
+    "active": "公開中",
+    "inactive": "非公開",
+    "delete": "削除"
+  },
+  "NewBusinessForm": {
+    "restaurantName": "レストラン名 *",
+    "restaurantNamePlaceholder": "例：サンセットカフェ",
+    "menuUrl": "メニューURL *",
+    "menuUrlHint": "optio-menu.ai/menu/",
+    "menuUrlPlaceholder": "sunset-cafe",
+    "type": "種別",
+    "selectType": "種別を選択…",
+    "description": "説明",
+    "descriptionPlaceholder": "レストランの簡単な説明…",
+    "address": "住所",
+    "addressPlaceholder": "東京都渋谷区1-1-1",
+    "logo": "ロゴ",
+    "clickToUploadLogo": "クリックしてロゴをアップロード",
+    "removeLogo": "削除",
+    "creating": "作成中…",
+    "createRestaurant": "レストランを作成",
+    "backToMyMenus": "← マイメニュー",
+    "pageTitle": "レストランを作成",
+    "somethingWentWrong": "エラーが発生しました"
+  },
+  "AddItemForm": {
+    "photo": "写真",
+    "clickToUploadPhoto": "クリックして写真をアップロード",
+    "photoHint": "JPG、PNG、WebP · 最大5MB",
+    "itemName": "アイテム名 *",
+    "itemNamePlaceholder": "例：マルゲリータピザ",
+    "description": "説明",
+    "descriptionPlaceholder": "原材料・アレルゲン・備考…",
+    "price": "価格（任意）",
+    "section": "セクション",
+    "noSection": "セクションなし",
+    "uploading": "アップロード中… {progress}%",
+    "saving": "保存中…",
+    "addToMenu": "メニューに追加",
+    "pageTitle": "メニューアイテムを追加",
+    "somethingWentWrong": "エラーが発生しました"
+  },
+  "SectionManager": {
+    "addSection": "+ セクション",
+    "newSection": "新しいセクション",
+    "sectionNamePlaceholder": "例：前菜",
+    "adding": "追加中…",
+    "add": "追加",
+    "cancel": "キャンセル"
+  },
+  "QRDisplay": {
+    "title": "QRコード",
+    "downloadPng": "⬇ PNG をダウンロード"
+  },
+  "MenuPage": {
+    "otherItems": "その他のアイテム",
+    "menuComingSoon": "メニューは近日公開予定！",
+    "advertisement": "広告",
+    "poweredBy": "Powered by",
+    "freeQrMenus": "無料QRメニュー",
+    "comments": {
+      "hide": "非表示",
+      "label": "コメント",
+      "beFirst": "最初にコメントしましょう！",
+      "placeholder": "コメントを書く…",
+      "post": "投稿",
+      "delete": "削除",
+      "signInToComment": "コメントするにはサインイン"
+    }
+  },
+  "Common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "edit": "編集",
+    "delete": "削除",
+    "preview": "プレビュー",
+    "active": "公開中",
+    "inactive": "非公開",
+    "signIn": "サインイン",
+    "signOut": "サインアウト",
+    "myMenus": "マイメニュー",
+    "dashboard": "ダッシュボード",
+    "restaurant": "レストラン",
+    "menu": "メニュー",
+    "addItem": "商品を追加",
+    "createYourMenu": "メニューを作成",
+    "getStartedFree": "無料で始める",
+    "qrCode": "QRコード",
+    "downloadPng": "PNG をダウンロード",
+    "privacyPolicy": "プライバシーポリシー",
+    "termsOfService": "利用規約"
+  }
+}

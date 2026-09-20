@@ -1,0 +1,212 @@
+{
+  "Metadata": {
+    "title": "Optio Menu — Free QR Menu for Restaurants",
+    "description": "Create a beautiful digital menu for your restaurant. Free forever. Instant QR code."
+  },
+  "HomePage": {
+    "nav": {
+      "signIn": "Sign in",
+      "getStartedFree": "Get started free"
+    },
+    "hero": {
+      "badge": "✨ Free forever — no credit card required",
+      "title": "Your restaurant menu,",
+      "titleHighlight": "one QR scan away",
+      "subtitle": "Create a beautiful digital menu in minutes. Share it with a QR code. Let guests browse, favorite dishes, and leave comments — all for free.",
+      "ctaPrimary": "Create your menu →",
+      "ctaSecondary": "See how it works"
+    },
+    "preview": {
+      "mockRestaurantName": "Sunset Café",
+      "mockRestaurantType": "Japanese · Shibuya, Tokyo",
+      "caption": "Your menu looks like this on any phone, instantly"
+    },
+    "features": {
+      "heading": "Everything you need. Nothing you don't.",
+      "items": {
+        "qr": {
+          "title": "Instant QR Code",
+          "desc": "Every menu gets a unique QR code. Download it, print it, and stick it on your table."
+        },
+        "languages": {
+          "title": "15 Languages",
+          "desc": "Your menu auto-translates for international guests. No extra work required."
+        },
+        "comments": {
+          "title": "Guest Comments",
+          "desc": "Guests can comment on dishes in real time — like a built-in review system for each item."
+        },
+        "favorites": {
+          "title": "Favorite Dishes",
+          "desc": "Signed-in guests can save their favourite dishes to re-order or remember for next time."
+        },
+        "photos": {
+          "title": "Photo Menus",
+          "desc": "Upload a photo for every dish. Looks gorgeous on any device."
+        },
+        "updates": {
+          "title": "Instant Updates",
+          "desc": "Change prices, add items, toggle availability — updates appear live within 60 seconds."
+        }
+      }
+    },
+    "howItWorks": {
+      "heading": "Up and running in 3 steps",
+      "steps": {
+        "step1": {
+          "title": "Create your restaurant",
+          "desc": "Sign up free, enter your name, address, and upload your logo."
+        },
+        "step2": {
+          "title": "Add your menu items",
+          "desc": "Add dishes with photos, descriptions, and prices. Organise by section."
+        },
+        "step3": {
+          "title": "Share your QR code",
+          "desc": "Download and print your QR code. Guests scan it to see your menu instantly."
+        }
+      }
+    },
+    "cta": {
+      "heading": "Ready to go digital?",
+      "subtitle": "Join restaurants already using Optio Menu. Free forever.",
+      "button": "Create your free menu →"
+    },
+    "footer": {
+      "copyright": "© {year} Optio Menu",
+      "email": "hello@optio-menu.ai",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service"
+    }
+  },
+  "LoginPage": {
+    "title": "Sign in",
+    "continueWithGoogle": "Continue with Google",
+    "orWithEmail": "or with email",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot?",
+    "signingIn": "Signing in…",
+    "signIn": "Sign in",
+    "noAccount": "Don't have an account?",
+    "signUpFree": "Sign up free"
+  },
+  "DashboardPage": {
+    "myMenus": "My Menus",
+    "restaurantCount": "{count} restaurant",
+    "restaurantCountPlural": "{count} restaurants",
+    "newRestaurant": "+ New restaurant",
+    "signOut": "Sign out",
+    "empty": {
+      "heading": "No menus yet",
+      "subtitle": "Create your first restaurant to get started",
+      "cta": "Create restaurant"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  },
+  "BusinessPage": {
+    "preview": "Preview ↗",
+    "edit": "Edit",
+    "menuItems": "Menu Items",
+    "noItemsYet": "No items yet",
+    "addFirstItem": "Add your first menu item",
+    "otherItems": "Other Items",
+    "details": "Details",
+    "status": "Status",
+    "address": "Address",
+    "active": "Active",
+    "inactive": "Inactive",
+    "delete": "Delete"
+  },
+  "NewBusinessForm": {
+    "restaurantName": "Restaurant name *",
+    "restaurantNamePlaceholder": "e.g. Sunset Café",
+    "menuUrl": "Menu URL *",
+    "menuUrlHint": "optio-menu.ai/menu/",
+    "menuUrlPlaceholder": "sunset-cafe",
+    "type": "Type",
+    "selectType": "Select type…",
+    "description": "Description",
+    "descriptionPlaceholder": "A short description of your restaurant…",
+    "address": "Address",
+    "addressPlaceholder": "1-1-1 Shibuya, Tokyo",
+    "logo": "Logo",
+    "clickToUploadLogo": "Click to upload logo",
+    "removeLogo": "Remove",
+    "creating": "Creating…",
+    "createRestaurant": "Create restaurant",
+    "backToMyMenus": "← My Menus",
+    "pageTitle": "Create Restaurant",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "AddItemForm": {
+    "photo": "Photo",
+    "clickToUploadPhoto": "Click to upload a photo",
+    "photoHint": "JPG, PNG, WebP · Max 5MB",
+    "itemName": "Item name *",
+    "itemNamePlaceholder": "e.g. Margherita Pizza",
+    "description": "Description",
+    "descriptionPlaceholder": "Ingredients, allergens, notes…",
+    "price": "Price (optional)",
+    "section": "Section",
+    "noSection": "No section",
+    "uploading": "Uploading… {progress}%",
+    "saving": "Saving…",
+    "addToMenu": "Add to menu",
+    "pageTitle": "Add Menu Item",
+    "somethingWentWrong": "Something went wrong"
+  },
+  "SectionManager": {
+    "addSection": "+ Section",
+    "newSection": "New section",
+    "sectionNamePlaceholder": "e.g. Starters",
+    "adding": "Adding…",
+    "add": "Add",
+    "cancel": "Cancel"
+  },
+  "QRDisplay": {
+    "title": "QR Code",
+    "downloadPng": "⬇ Download PNG"
+  },
+  "MenuPage": {
+    "otherItems": "Other Items",
+    "menuComingSoon": "Menu coming soon!",
+    "advertisement": "Advertisement",
+    "poweredBy": "Powered by",
+    "freeQrMenus": "Free QR menus",
+    "comments": {
+      "hide": "Hide",
+      "label": "Comments",
+      "beFirst": "Be the first to comment!",
+      "placeholder": "Write a comment…",
+      "post": "Post",
+      "delete": "Delete",
+      "signInToComment": "Sign in to comment"
+    }
+  },
+  "Common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "preview": "Preview",
+    "active": "Active",
+    "inactive": "Inactive",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "myMenus": "My Menus",
+    "dashboard": "Dashboard",
+    "restaurant": "Restaurant",
+    "menu": "Menu",
+    "addItem": "Add item",
+    "createYourMenu": "Create your menu",
+    "getStartedFree": "Get started free",
+    "qrCode": "QR Code",
+    "downloadPng": "Download PNG",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
+}

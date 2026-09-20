@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-xl font-bold text-gray-900 mb-3">2. The service</h2>
-            <p>Optio Menu provides a free platform for restaurants and food businesses to create and share digital menus via QR codes. The service is provided "as is" with no uptime guarantee on the free tier.</p>
+            <p>Optio Menu provides a free platform for restaurants and food businesses to create and share digital menus via QR codes. The service is provided &quot;as is&quot; with no uptime guarantee on the free tier.</p>
           </section>
 
           <section>

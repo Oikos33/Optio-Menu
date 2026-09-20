@@ -1,18 +1,22 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
 import type { BusinessWithType } from '@/types/database'
+import { getImageUrl } from '@/lib/utils'
+import { getTranslations } from 'next-intl/server'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login?redirectTo=/dashboard')
 
+  const t = await getTranslations('DashboardPage')
+
   const { data: businesses } = await supabase
     .from('businesses')
     .select('*, business_types(id, name)')
-    .eq('user_id', user.id)
+    .eq('user_id', user!.id)
     .order('created_at', { ascending: false })
 
   return (
@@ -24,9 +28,9 @@ export default async function DashboardPage() {
             <span className="text-teal-600">Optio</span><span className="text-gray-900">Menu</span>
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 hidden sm:block">{user.email}</span>
+            <span className="text-sm text-gray-500 hidden sm:block">{user!.email}</span>
             <form action="/auth/signout" method="POST">
-              <button className="text-sm text-gray-400 hover:text-gray-600">Sign out</button>
+              <button className="text-sm text-gray-400 hover:text-gray-600">{t('signOut')}</button>
             </form>
           </div>
         </div>
@@ -35,29 +39,31 @@ export default async function DashboardPage() {
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Menus</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t('myMenus')}</h1>
             <p className="text-sm text-gray-500 mt-0.5">
-              {businesses?.length ?? 0} restaurant{businesses?.length !== 1 ? 's' : ''}
+              {businesses?.length !== 1
+                ? t('restaurantCountPlural', { count: businesses?.length ?? 0 })
+                : t('restaurantCount', { count: 1 })}
             </p>
           </div>
           <Link
             href="/dashboard/businesses/new"
             className="bg-teal-600 text-white text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-700 transition-colors"
           >
-            + New restaurant
+            {t('newRestaurant')}
           </Link>
         </div>
 
         {!businesses?.length ? (
           <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200">
             <p className="text-4xl mb-3">🍽️</p>
-            <h2 className="font-semibold text-gray-700 mb-1">No menus yet</h2>
-            <p className="text-sm text-gray-500 mb-4">Create your first restaurant to get started</p>
+            <h2 className="font-semibold text-gray-700 mb-1">{t('empty.heading')}</h2>
+            <p className="text-sm text-gray-500 mb-4">{t('empty.subtitle')}</p>
             <Link
               href="/dashboard/businesses/new"
               className="inline-block bg-teal-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-teal-700"
             >
-              Create restaurant
+              {t('empty.cta')}
             </Link>
           </div>
         ) : (
@@ -71,7 +77,7 @@ export default async function DashboardPage() {
                 <div className="flex items-start gap-3">
                   {biz.logo_path ? (
                     <img
-                      src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/${biz.logo_path}?width=80&quality=80`}
+                      src={getImageUrl(biz.logo_path, { width: 80 })}
                       alt={biz.name}
                       className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
                     />
@@ -91,7 +97,7 @@ export default async function DashboardPage() {
                           ? 'bg-green-100 text-green-700'
                           : 'bg-gray-100 text-gray-500'
                       }`}>
-                        {biz.is_active ? 'Active' : 'Inactive'}
+                        {biz.is_active ? t('status.active') : t('status.inactive')}
                       </span>
                     </div>
                   </div>

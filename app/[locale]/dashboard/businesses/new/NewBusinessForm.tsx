@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { slugify, getTranslation } from '@/lib/utils'
 import type { BusinessType } from '@/types/database'
+import { useTranslations } from 'next-intl'
 
 interface Props {
   userId: string
@@ -14,6 +15,7 @@ interface Props {
 export default function NewBusinessForm({ userId, businessTypes }: Props) {
   const router = useRouter()
   const supabase = createClient()
+  const t = useTranslations('NewBusinessForm')
 
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
@@ -76,7 +78,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
       if (insertError) throw insertError
       router.push(`/dashboard/businesses/${business.id}`)
     } catch (err: any) {
-      setError(err.message || 'Something went wrong')
+      setError(err.message || t('somethingWentWrong'))
       setSaving(false)
     }
   }
@@ -89,11 +91,11 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
 
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant name *</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('restaurantName')}</label>
         <input
           type="text" required maxLength={255}
           value={name} onChange={e => handleNameChange(e.target.value)}
-          placeholder="e.g. Sunset Café"
+          placeholder={t('restaurantNamePlaceholder')}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
@@ -101,30 +103,30 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
       {/* Slug */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Menu URL *
-          <span className="text-gray-400 font-normal ml-1">optio-menu.ai/menu/</span>
+          {t('menuUrl')}
+          <span className="text-gray-400 font-normal ml-1">{t('menuUrlHint')}</span>
         </label>
         <input
           type="text" required maxLength={100}
           value={slug}
           onChange={e => { setSlug(slugify(e.target.value)); setSlugEdited(true) }}
-          placeholder="sunset-cafe"
+          placeholder={t('menuUrlPlaceholder')}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
       {/* Business type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('type')}</label>
         <select
           value={businessTypeId}
           onChange={e => setBusinessTypeId(e.target.value)}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         >
-          <option value="">Select type…</option>
-          {businessTypes.map(t => (
-            <option key={t.id} value={t.id}>
-              {getTranslation(t.name, 'en')}
+          <option value="">{t('selectType')}</option>
+          {businessTypes.map(bt => (
+            <option key={bt.id} value={bt.id}>
+              {getTranslation(bt.name, 'en')}
             </option>
           ))}
         </select>
@@ -132,39 +134,39 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('description')}</label>
         <textarea
           rows={2} maxLength={2000}
           value={description} onChange={e => setDescription(e.target.value)}
-          placeholder="A short description of your restaurant…"
+          placeholder={t('descriptionPlaceholder')}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300 resize-none"
         />
       </div>
 
       {/* Address */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('address')}</label>
         <input
           type="text" maxLength={500}
           value={address} onChange={e => setAddress(e.target.value)}
-          placeholder="1-1-1 Shibuya, Tokyo"
+          placeholder={t('addressPlaceholder')}
           className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
         />
       </div>
 
       {/* Logo */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Logo</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('logo')}</label>
         {logoPreview ? (
           <div className="flex items-center gap-3">
             <img src={logoPreview} className="w-16 h-16 rounded-xl object-cover border" alt="Logo preview" />
             <button type="button" onClick={() => { setLogoFile(null); setLogoPreview(null) }}
-              className="text-sm text-red-400 hover:text-red-600">Remove</button>
+              className="text-sm text-red-400 hover:text-red-600">{t('removeLogo')}</button>
           </div>
         ) : (
           <label className="flex flex-col items-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-6 cursor-pointer hover:border-teal-300 transition-colors">
             <span className="text-2xl">📷</span>
-            <span className="text-sm text-gray-500">Click to upload logo</span>
+            <span className="text-sm text-gray-500">{t('clickToUploadLogo')}</span>
             <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
           </label>
         )}
@@ -175,7 +177,7 @@ export default function NewBusinessForm({ userId, businessTypes }: Props) {
           type="submit" disabled={saving}
           className="w-full bg-teal-600 text-white font-semibold py-3 rounded-xl hover:bg-teal-700 disabled:opacity-50 transition-colors"
         >
-          {saving ? 'Creating…' : 'Create restaurant'}
+          {saving ? t('creating') : t('createRestaurant')}
         </button>
       </div>
     </form>
