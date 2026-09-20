@@ -147,8 +147,12 @@ export default function HomePage() {
       </section>
 
       {/* ── Footer ──────────────────────────────────────────── */}
-      <footer className="border-t border-gray-100 py-8 text-center text-sm text-gray-400">
+      <footer className="border-t border-gray-100 py-8 text-center text-sm text-gray-400 space-y-2">
         <p>© {new Date().getFullYear()} Optio Menu · <a href="mailto:hello@optio-menu.ai" className="hover:text-gray-600">hello@optio-menu.ai</a></p>
+        <p className="flex items-center justify-center gap-4">
+          <Link href="/privacy" className="hover:text-gray-600">Privacy Policy</Link>
+          <Link href="/terms" className="hover:text-gray-600">Terms of Service</Link>
+        </p>
       </footer>
 
     </div>
