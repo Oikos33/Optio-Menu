@@ -16,7 +16,10 @@ import TableSessionBanner from './TableSessionBanner'
 import DishIntelCard from './DishIntelCard'
 import DietaryFilter from './DietaryFilter'
 import WhatsHotBanner from './WhatsHotBanner'
+import MemoryLane, { saveOrderToMemory } from './MemoryLane'
+import AIAssistant from './AIAssistant'
 import DishRatingRow from './DishRatingRow'
+import ComboCard from './ComboCard'
 
 const LOCALES: Record<string, string> = {
   en: 'English', ja: '日本語', zh: '中文', ko: '한국어',
@@ -102,6 +105,9 @@ export default function MenuPageClient({ business }: Props) {
   const getQtyInCart = (itemId: string) => cart.find(c => c.menuItemId === itemId)?.quantity ?? 0
 
   const handleOrderPlaced = (orderId: string, resolvedTableName: string | null) => {
+    // Save to Memory Lane for "order again" next visit
+    const total = cart.reduce((s, i) => s + (i.price ?? 0) * i.quantity, 0)
+    saveOrderToMemory(business.id, orderId, cart, total, (business as any).currency ?? 'JPY')
     setPlacedOrderId(orderId)
     setPlacedTableName(resolvedTableName ?? tableName)
   }
@@ -213,6 +219,53 @@ export default function MenuPageClient({ business }: Props) {
 
         {/* ── WHAT'S HOT ────────────────────────────────── */}
         <WhatsHotBanner businessId={business.id} />
+
+        {/* ── COMBO DEALS ────────────────────────────────── */}
+        {((business as any).combo_deals ?? []).filter((c: any) => c.is_available).length > 0 && (
+          <ComboCard
+            combos={((business as any).combo_deals as any[])
+              .filter((c: any) => c.is_available)
+              .map((c: any) => ({
+                id: c.id,
+                name: c.name,
+                description: c.description,
+                price: c.price,
+                items: (c.combo_deal_items ?? []).map((ci: any) => ({
+                  name: ci.menu_items?.name ?? ci.name,
+                  quantity: ci.quantity,
+                })),
+                itemsWithPrice: (c.combo_deal_items ?? []).map((ci: any) => ({
+                  menu_item_id: ci.menu_item_id,
+                  name: ci.menu_items?.name ?? ci.name,
+                  quantity: ci.quantity,
+                  price: ci.menu_items?.price ?? null,
+                })),
+              }))}
+            locale={locale}
+            restaurantCurrency={(business as any).currency ?? 'JPY'}
+            onAddToCart={(items) =>
+              items.forEach(i => {
+                const times = i.quantity > 0 ? i.quantity : 1
+                for (let q = 0; q < times; q++) {
+                  addToCart({ id: i.menuItemId, name: i.name, price: i.price })
+                }
+              })
+            }
+          />
+        )}
+
+        {/* ── MEMORY LANE ───────────────────────────────── */}
+        <MemoryLane
+          businessId={business.id}
+          restaurantCurrency={(business as any).currency ?? 'JPY'}
+          onAddToCart={(items) => items.forEach(i => {
+            setCart(prev => {
+              const existing = prev.find(c => c.menuItemId === i.menuItemId)
+              if (existing) return prev.map(c => c.menuItemId === i.menuItemId ? { ...c, quantity: c.quantity + i.quantity } : c)
+              return [...prev, i]
+            })
+          })}
+        />
 
         {/* ── DIETARY FILTER ────────────────────────────── */}
         {allTags.length > 0 && (
@@ -331,6 +384,9 @@ export default function MenuPageClient({ business }: Props) {
         tipEnabled={(business as any).tip_enabled ?? false}
         tipPresets={(business as any).tip_presets ?? [10, 15, 20]}
       />
+
+      {/* ── AI ASSISTANT ──────────────────────────────────── */}
+      <AIAssistant businessId={business.id} locale={locale} />
     </div>
   )
 }

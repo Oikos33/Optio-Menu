@@ -67,6 +67,13 @@ export default async function MenuPage({ params }: Props) {
       menu_items (
         id, name, description, price, image_path, sort_order, menu_section_id,
         menu_item_comments ( id, body, user_id, created_at )
+      ),
+      combo_deals (
+        id, name, description, price, is_available,
+        combo_deal_items (
+          id, menu_item_id, quantity,
+          menu_items ( id, name, price )
+        )
       )
     `)
     .eq('slug', slug)

@@ -1,46 +1,51 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
-import RestaurantProfileEditor from '@/components/dashboard/RestaurantProfileEditor'
+import ComboManager, { type ComboWithItems } from '@/components/dashboard/ComboManager'
 
 interface Props {
   params: Promise<{ locale: string; id: string }>
 }
 
-interface BusinessSettings {
-  id: string
-  name: string
-  slug: string
-  currency: string
-  tip_enabled: boolean
-  tip_presets: number[]
-  occasions: string[]
-  amenities: Record<string, boolean>
-  dress_code: string | null
-  languages_spoken: string[]
-  walk_in_ok: boolean
-  kds_pin: string | null
-}
-
-export default async function BusinessSettingsPage({ params }: Props) {
+export default async function CombosPage({ params }: Props) {
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  // Verify ownership + get business details
   const { data: business } = await (supabase as any)
     .from('businesses')
-    .select(`
-      id, name, slug,
-      currency, tip_enabled, tip_presets,
-      occasions, amenities, dress_code,
-      languages_spoken, walk_in_ok, kds_pin
-    `)
+    .select('id, name, slug, currency')
     .eq('id', id)
     .eq('user_id', user.id)
-    .single() as { data: BusinessSettings | null }
+    .single() as { data: { id: string; name: string; slug: string; currency: string } | null }
 
   if (!business) notFound()
+
+  // Fetch all menu items for this business (for the combo builder)
+  const { data: menuItems } = await (supabase as any)
+    .from('menu_items')
+    .select('id, name, price')
+    .eq('business_id', id)
+    .order('sort_order', { ascending: true }) as {
+      data: { id: string; name: any; price: number | null }[] | null
+    }
+
+  // Fetch existing combo deals with their items joined to menu_items
+  const { data: combos } = await (supabase as any)
+    .from('combo_deals')
+    .select(`
+      id, name, description, price, is_available,
+      combo_deal_items (
+        id, menu_item_id, quantity,
+        menu_items ( id, name, price )
+      )
+    `)
+    .eq('business_id', id)
+    .order('created_at', { ascending: false }) as { data: ComboWithItems[] | null }
+
+  const currency: string = business.currency ?? 'JPY'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,7 +59,7 @@ export default async function BusinessSettingsPage({ params }: Props) {
           </Link>
           <div className="flex-1 min-w-0">
             <h1 className="font-bold text-gray-900 truncate">{business.name}</h1>
-            <p className="text-xs text-gray-400">/menu/{business.slug}</p>
+            <p className="text-xs text-gray-400">Combo / Package Deals</p>
           </div>
         </div>
 
@@ -84,37 +89,31 @@ export default async function BusinessSettingsPage({ params }: Props) {
           >
             🍳 KDS
           </Link>
+          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600 whitespace-nowrap">
+            🎁 Deals
+          </span>
           <Link
-            href={`/dashboard/businesses/${id}/combos`}
+            href={`/dashboard/businesses/${id}/settings`}
             className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
           >
-            🎁 Deals
-          </Link>
-          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600 whitespace-nowrap">
             ⚙️ Settings
-          </span>
+          </Link>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-6">
         <div className="mb-6">
-          <h2 className="font-bold text-gray-900 text-xl">Restaurant Settings</h2>
+          <h2 className="font-bold text-gray-900 text-xl">🎁 Combo / Package Deals</h2>
           <p className="text-sm text-gray-400 mt-0.5">
-            Configure currency, tipping, occasions, amenities and kitchen access.
+            Bundle menu items into special deal sets. Customers can add all items in one tap.
           </p>
         </div>
 
-        <RestaurantProfileEditor
+        <ComboManager
           businessId={id}
-          currency={business.currency ?? 'JPY'}
-          tipEnabled={business.tip_enabled ?? false}
-          tipPresets={business.tip_presets ?? [10, 15, 20]}
-          occasions={business.occasions ?? []}
-          amenities={(business.amenities ?? {}) as Record<string, boolean>}
-          dressCode={business.dress_code ?? null}
-          languagesSpoken={business.languages_spoken ?? []}
-          walkInOk={business.walk_in_ok ?? true}
-          kdsPin={business.kds_pin ?? null}
+          menuItems={menuItems ?? []}
+          existingCombos={combos ?? []}
+          currency={currency}
         />
       </main>
     </div>
