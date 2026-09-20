@@ -164,6 +164,7 @@ export default function OrdersDashboard({ businessId, initialOrders }: Props) {
                       advanceLabel={meta.nextLabel}
                       onCancel={() => cancelOrder(order.id)}
                       timeAgo={timeAgo(order.created_at)}
+                      businessId={businessId}
                     />
                   ))}
                   {colOrders.length === 0 && (
@@ -203,6 +204,7 @@ export default function OrdersDashboard({ businessId, initialOrders }: Props) {
                         onCancel={() => cancelOrder(order.id)}
                         timeAgo={timeAgo(order.created_at)}
                         flat
+                        businessId={businessId}
                       />
                     )
                   })}
@@ -219,7 +221,7 @@ export default function OrdersDashboard({ businessId, initialOrders }: Props) {
 // ── ORDER CARD ─────────────────────────────────────────────
 
 function OrderCard({
-  order, updating, onAdvance, advanceLabel, onCancel, timeAgo, flat = false,
+  order, updating, onAdvance, advanceLabel, onCancel, timeAgo, flat = false, businessId,
 }: {
   order: Order
   updating: boolean
@@ -228,6 +230,7 @@ function OrderCard({
   onCancel: () => void
   timeAgo: string
   flat?: boolean
+  businessId?: string
 }) {
   const meta = STATUS_META[order.status] ?? STATUS_META.pending
   const shortId = order.id.slice(0, 8).toUpperCase()
@@ -273,6 +276,17 @@ function OrderCard({
       <div className="flex items-center gap-2">
         {order.total != null && (
           <span className="text-sm font-bold text-gray-900 mr-auto">¥{order.total.toFixed(0)}</span>
+        )}
+        {order.status === 'paid' && businessId && (
+          <a
+            href={`/dashboard/businesses/${businessId}/orders/${order.id}/receipt`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-500 hover:text-teal-600 transition-colors px-2 py-1 border border-gray-200 rounded-lg"
+            title="Print receipt"
+          >
+            🖨️ Receipt
+          </a>
         )}
         <button
           onClick={onCancel}

@@ -12,6 +12,7 @@ import FavoriteButton from './FavoriteButton'
 import MapSection from './MapSection'
 import CartDrawer from './CartDrawer'
 import OrderConfirmation from './OrderConfirmation'
+import TableSessionBanner from './TableSessionBanner'
 
 const LOCALES: Record<string, string> = {
   en: 'English', ja: '日本語', zh: '中文', ko: '한국어',
@@ -28,6 +29,7 @@ export default function MenuPageClient({ business }: Props) {
   const supabase = createClient()
   const searchParams = useSearchParams()
   const tableToken = searchParams.get('t')
+  const isStaffMode = searchParams.get('mode') === 'staff'
 
   const [locale, setLocale] = useState('en')
   const [activeSection, setActiveSection] = useState<string | null>(null)
@@ -154,6 +156,16 @@ export default function MenuPageClient({ business }: Props) {
         </div>
       </header>
 
+      {/* ── STAFF MODE BANNER ──────────────────────────────────── */}
+      {isStaffMode && (
+        <div className="bg-teal-600 text-white text-sm font-semibold px-4 py-2 text-center">
+          👔 Staff Mode — ordering on behalf of the customer
+        </div>
+      )}
+
+      {/* ── TABLE SESSION BANNER ────────────────────────────────── */}
+      <TableSessionBanner tableToken={tableToken} businessSlug={business.slug} />
+
       {/* ── AD SLOT — TOP ─────────────────────────────────── */}
       <div className="max-w-2xl mx-auto px-4 pt-3">
         <div className="bg-gray-100 rounded-lg h-16 flex items-center justify-center text-xs text-gray-400 border border-dashed border-gray-200">
@@ -169,6 +181,7 @@ export default function MenuPageClient({ business }: Props) {
             {business.description}
           </p>
         )}
+
 
         {/* ── SECTION TABS ──────────────────────────────── */}
         {business.menu_sections.length > 0 && (
@@ -278,6 +291,10 @@ export default function MenuPageClient({ business }: Props) {
         onUpdateNote={updateNote}
         onClear={() => setCart([])}
         onOrderPlaced={handleOrderPlaced}
+        isStaffMode={isStaffMode}
+        restaurantCurrency={(business as any).currency ?? 'JPY'}
+        tipEnabled={(business as any).tip_enabled ?? false}
+        tipPresets={(business as any).tip_presets ?? [10, 15, 20]}
       />
     </div>
   )

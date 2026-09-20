@@ -6,6 +6,7 @@ import { getImageUrl } from '@/lib/utils'
 import QRDisplay from '@/components/dashboard/QRDisplay'
 import AddItemButton from '@/components/dashboard/AddItemButton'
 import SectionManager from '@/components/dashboard/SectionManager'
+import AvailabilityToggle from '@/components/dashboard/AvailabilityToggle'
 import { getTranslations } from 'next-intl/server'
 
 interface Props {
@@ -20,14 +21,14 @@ export default async function BusinessManagePage({ params }: Props) {
 
   const t = await getTranslations('BusinessPage')
 
-  // Fetch business with sections + items
+  // Fetch business with sections + items (menu_items(*) includes availability fields post-migration)
   const { data: business } = await (supabase as any)
     .from('businesses')
     .select(`
       *,
       business_types(id, name),
-      menu_sections(id, name, sort_order, menu_items(id, name, price, image_path, sort_order)),
-      menu_items(id, name, price, image_path, sort_order, menu_section_id)
+      menu_sections(id, name, sort_order, menu_items(*)),
+      menu_items(*)
     `)
     .eq('id', id)
     .eq('user_id', user.id)
@@ -78,21 +79,33 @@ export default async function BusinessManagePage({ params }: Props) {
         </div>
 
         {/* Tab navigation */}
-        <div className="max-w-5xl mx-auto px-4 flex gap-1 pb-0 -mb-px">
-          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600">
+        <div className="max-w-5xl mx-auto px-4 flex gap-1 pb-0 -mb-px overflow-x-auto">
+          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600 whitespace-nowrap">
             {t('tabMenu')}
           </span>
           <Link
             href={`/dashboard/businesses/${id}/tables`}
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors"
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
           >
             {t('tabTables')}
           </Link>
           <Link
             href={`/dashboard/businesses/${id}/orders`}
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors"
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
           >
             {t('tabOrders')}
+          </Link>
+          <Link
+            href={`/dashboard/businesses/${id}/kds`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
+          >
+            🍳 KDS
+          </Link>
+          <Link
+            href={`/dashboard/businesses/${id}/settings`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
+          >
+            ⚙️ Settings
           </Link>
         </div>
       </header>
@@ -205,6 +218,16 @@ function ItemRow({ item, businessId, tEdit, tDelete }: { item: any; businessId: 
         )}
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
+        {/* Availability toggle */}
+        <AvailabilityToggle
+          itemId={item.id}
+          businessId={businessId}
+          isAvailable={item.is_available ?? true}
+          availableFrom={item.available_from ?? null}
+          availableUntil={item.available_until ?? null}
+          trackStock={item.track_stock ?? false}
+          stockCount={item.stock_count ?? null}
+        />
         <Link href={`/dashboard/items/${item.id}/edit`}
           className="text-xs text-gray-500 hover:text-teal-600 font-medium">{tEdit}</Link>
         <form action={`/api/items/${item.id}/delete`} method="POST">

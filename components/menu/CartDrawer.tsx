@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import type { CartItem } from '@/app/api/orders/route'
+import { formatAmount } from '@/lib/currency'
+import BillSplitter from './BillSplitter'
 
 interface Props {
   cartItems: CartItem[]
@@ -12,18 +14,36 @@ interface Props {
   onUpdateNote: (menuItemId: string, note: string) => void
   onClear: () => void
   onOrderPlaced: (orderId: string, tableName: string | null) => void
+  isStaffMode?: boolean
+  restaurantCurrency?: string
+  tipEnabled?: boolean
+  tipPresets?: number[]
 }
 
 export default function CartDrawer({
   cartItems, tableName, businessId, tableToken,
   onUpdateQty, onUpdateNote, onClear, onOrderPlaced,
+  isStaffMode = false,
+  restaurantCurrency = 'JPY',
+  tipEnabled = false,
+  tipPresets = [10, 15, 20],
 }: Props) {
   const [open, setOpen] = useState(false)
   const [orderNote, setOrderNote] = useState('')
+  const [waiterName, setWaiterName] = useState('')
   const [placing, setPlacing] = useState(false)
   const [error, setError] = useState('')
 
-  const total = cartItems.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0)
+  // Tipping
+  const [selectedTipPct, setSelectedTipPct] = useState<number | null>(null)
+  const [customTipPct, setCustomTipPct] = useState('')
+  const [showCustomTip, setShowCustomTip] = useState(false)
+  const [showSplit, setShowSplit] = useState(false)
+
+  const subtotal = cartItems.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0)
+  const tipPct = showCustomTip ? (Number(customTipPct) || 0) : (selectedTipPct ?? 0)
+  const tipAmount = subtotal * tipPct / 100
+  const total = subtotal + tipAmount
   const itemCount = cartItems.reduce((sum, i) => sum + i.quantity, 0)
 
   const placeOrder = async () => {
@@ -38,6 +58,9 @@ export default function CartDrawer({
           tableToken: tableToken || undefined,
           items: cartItems,
           notes: orderNote.trim() || undefined,
+          tipAmount: tipAmount > 0 ? tipAmount : undefined,
+          placed_by: isStaffMode ? 'staff' : 'customer',
+          waiter_name: isStaffMode && waiterName.trim() ? waiterName.trim() : undefined,
         }),
       })
       const data = await res.json()
@@ -45,9 +68,13 @@ export default function CartDrawer({
       onClear()
       setOpen(false)
       setOrderNote('')
+      setWaiterName('')
+      setSelectedTipPct(null)
+      setCustomTipPct('')
+      setShowSplit(false)
       onOrderPlaced(data.orderId, data.tableName)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setPlacing(false)
     }
@@ -66,9 +93,9 @@ export default function CartDrawer({
           {itemCount}
         </span>
         <span>View Cart</span>
-        <span className="text-teal-200 font-semibold">
-          {total > 0 ? `¥${total.toFixed(0)}` : ''}
-        </span>
+        {total > 0 && (
+          <span className="text-teal-200 font-semibold">{formatAmount(total, restaurantCurrency)}</span>
+        )}
       </button>
 
       {/* Backdrop */}
@@ -80,7 +107,7 @@ export default function CartDrawer({
       )}
 
       {/* Slide-up drawer */}
-      <div className={`fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
+      <div className={`fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] flex flex-col transition-transform duration-300 ${open ? 'translate-y-0' : 'translate-y-full'}`}>
         {/* Handle */}
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
@@ -93,6 +120,11 @@ export default function CartDrawer({
             {tableName && (
               <p className="text-sm text-teal-600 font-medium">🪑 {tableName}</p>
             )}
+            {isStaffMode && (
+              <p className="text-xs text-teal-700 font-semibold bg-teal-50 px-2 py-0.5 rounded-full mt-1 inline-block">
+                👔 Staff Mode
+              </p>
+            )}
           </div>
           <button
             onClick={() => setOpen(false)}
@@ -104,8 +136,9 @@ export default function CartDrawer({
           </button>
         </div>
 
-        {/* Items */}
+        {/* Scrollable body */}
         <div className="flex-1 overflow-y-auto px-5 py-3 space-y-4">
+          {/* Items */}
           {cartItems.map(item => (
             <div key={item.menuItemId}>
               <div className="flex items-center gap-3">
@@ -113,9 +146,9 @@ export default function CartDrawer({
                   <p className="font-medium text-gray-900 text-sm truncate">{item.name}</p>
                   {item.price != null && (
                     <p className="text-xs text-teal-600 font-semibold mt-0.5">
-                      ¥{(item.price * item.quantity).toFixed(0)}
+                      {formatAmount(item.price * item.quantity, restaurantCurrency)}
                       {item.quantity > 1 && (
-                        <span className="text-gray-400 font-normal"> (¥{item.price.toFixed(0)} × {item.quantity})</span>
+                        <span className="text-gray-400 font-normal"> ({formatAmount(item.price, restaurantCurrency)} × {item.quantity})</span>
                       )}
                     </p>
                   )}
@@ -144,6 +177,20 @@ export default function CartDrawer({
             </div>
           ))}
 
+          {/* Waiter name — staff mode only */}
+          {isStaffMode && (
+            <div className="border-t border-teal-100 pt-3">
+              <label className="text-sm font-medium text-teal-700 block mb-1">👔 Your name (optional)</label>
+              <input
+                type="text"
+                placeholder="e.g. Maria"
+                value={waiterName}
+                onChange={e => setWaiterName(e.target.value)}
+                className="w-full text-sm border border-teal-200 bg-teal-50 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-200"
+              />
+            </div>
+          )}
+
           {/* Order note */}
           <div className="border-t border-gray-100 pt-3">
             <label className="text-sm font-medium text-gray-700 block mb-1">Order note</label>
@@ -155,6 +202,81 @@ export default function CartDrawer({
               className="w-full text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-200 resize-none"
             />
           </div>
+
+          {/* Tip section */}
+          {tipEnabled && subtotal > 0 && (
+            <div className="border-t border-gray-100 pt-3">
+              <p className="text-sm font-medium text-gray-700 mb-2">Tip</p>
+              <div className="flex gap-2 flex-wrap">
+                {tipPresets.map(pct => (
+                  <button
+                    key={pct}
+                    onClick={() => { setSelectedTipPct(pct === selectedTipPct ? null : pct); setShowCustomTip(false) }}
+                    className={`text-sm px-3 py-1.5 rounded-xl font-medium transition-colors ${
+                      !showCustomTip && selectedTipPct === pct
+                        ? 'bg-teal-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {pct}%
+                  </button>
+                ))}
+                <button
+                  onClick={() => { setShowCustomTip(v => !v); setSelectedTipPct(null) }}
+                  className={`text-sm px-3 py-1.5 rounded-xl font-medium transition-colors ${
+                    showCustomTip ? 'bg-teal-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Custom
+                </button>
+              </div>
+              {showCustomTip && (
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="number"
+                    min="0" max="100"
+                    value={customTipPct}
+                    onChange={e => setCustomTipPct(e.target.value)}
+                    placeholder="e.g. 12"
+                    className="w-20 text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-200"
+                  />
+                  <span className="text-sm text-gray-500">%</span>
+                  {Number(customTipPct) > 0 && (
+                    <span className="text-sm text-teal-600 font-semibold">
+                      = {formatAmount(tipAmount, restaurantCurrency)}
+                    </span>
+                  )}
+                </div>
+              )}
+              {tipAmount > 0 && (
+                <p className="text-xs text-gray-500 mt-1">
+                  Tip: {formatAmount(tipAmount, restaurantCurrency)} ({tipPct}%)
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Bill splitter */}
+          <div className="border-t border-gray-100 pt-3">
+            <button
+              onClick={() => setShowSplit(v => !v)}
+              className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-teal-600 transition-colors"
+            >
+              <span>⚖️ Split the bill</span>
+              <svg className={`w-4 h-4 transition-transform ${showSplit ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {showSplit && (
+              <div className="mt-3">
+                <BillSplitter
+                  cartItems={cartItems}
+                  restaurantCurrency={restaurantCurrency}
+                  tipAmount={tipAmount}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer */}
@@ -162,16 +284,33 @@ export default function CartDrawer({
           {error && (
             <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2 text-center">{error}</p>
           )}
-          <div className="flex items-center justify-between text-sm font-bold text-gray-900">
-            <span>Total ({itemCount} items)</span>
-            <span className="text-teal-600 text-lg">{total > 0 ? `¥${total.toFixed(0)}` : '—'}</span>
+
+          {/* Totals */}
+          <div className="space-y-1">
+            {tipAmount > 0 && (
+              <>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>Subtotal</span>
+                  <span>{formatAmount(subtotal, restaurantCurrency)}</span>
+                </div>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>Tip ({tipPct}%)</span>
+                  <span>{formatAmount(tipAmount, restaurantCurrency)}</span>
+                </div>
+              </>
+            )}
+            <div className="flex items-center justify-between text-sm font-bold text-gray-900">
+              <span>Total ({itemCount} item{itemCount !== 1 ? 's' : ''})</span>
+              <span className="text-teal-600 text-lg">{total > 0 ? formatAmount(total, restaurantCurrency) : '—'}</span>
+            </div>
           </div>
+
           <button
             onClick={placeOrder}
             disabled={placing}
             className="w-full bg-teal-600 text-white font-bold py-4 rounded-2xl hover:bg-teal-700 disabled:opacity-50 transition-colors text-base"
           >
-            {placing ? '⏳ Placing order…' : '🛎️ Place Order'}
+            {placing ? '⏳ Placing order…' : isStaffMode ? '👔 Place Staff Order' : '🛎️ Place Order'}
           </button>
           <button
             onClick={onClear}

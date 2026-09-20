@@ -14,13 +14,16 @@ export interface PlaceOrderBody {
   tableToken?: string      // from ?t= in URL
   items: CartItem[]
   notes?: string           // order-level note
+  tipAmount?: number       // tip in restaurant currency
+  placed_by?: string       // 'customer' | 'staff'
+  waiter_name?: string     // only when placed_by === 'staff'
 }
 
 export async function POST(req: NextRequest) {
   const supabase = createPublicClient()
   const body: PlaceOrderBody = await req.json()
 
-  const { businessId, tableToken, items, notes } = body
+  const { businessId, tableToken, items, notes, tipAmount, placed_by, waiter_name } = body
 
   if (!businessId || !items?.length) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -46,7 +49,7 @@ export async function POST(req: NextRequest) {
   // Calculate total
   const total = items.reduce((sum, item) => sum + (item.price ?? 0) * item.quantity, 0)
 
-  // Insert order
+  // Insert order — tip_amount stored via 004_phase1_enrichment.sql (section 6)
   const { data: order, error: orderError } = await (supabase as any)
     .from('orders')
     .insert({
@@ -55,6 +58,9 @@ export async function POST(req: NextRequest) {
       table_name: tableName,
       notes: notes?.trim() || null,
       total: Number(total.toFixed(2)),
+      tip_amount: tipAmount != null && tipAmount > 0 ? Number(tipAmount.toFixed(2)) : null,
+      placed_by: placed_by || 'customer',
+      waiter_name: placed_by === 'staff' ? (waiter_name?.trim() || null) : null,
     })
     .select('id')
     .single()

@@ -56,22 +56,34 @@ export default async function OrdersPage({ params }: Props) {
         </div>
 
         {/* Tab nav */}
-        <div className="max-w-6xl mx-auto px-4 flex gap-1 pb-0 -mb-px">
+        <div className="max-w-6xl mx-auto px-4 flex gap-1 pb-0 -mb-px overflow-x-auto">
           <Link
             href={`/dashboard/businesses/${id}`}
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors"
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
           >
             {t('tabMenu')}
           </Link>
           <Link
             href={`/dashboard/businesses/${id}/tables`}
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors"
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
           >
             {t('tabTables')}
           </Link>
-          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600">
+          <span className="text-sm font-semibold text-teal-600 px-4 py-2 border-b-2 border-teal-600 whitespace-nowrap">
             {t('tabOrders')}
           </span>
+          <Link
+            href={`/dashboard/businesses/${id}/kds`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
+          >
+            🍳 KDS
+          </Link>
+          <Link
+            href={`/dashboard/businesses/${id}/settings`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
+          >
+            ⚙️ Settings
+          </Link>
         </div>
       </header>
 
