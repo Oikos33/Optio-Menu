@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import { getTranslation } from '@/lib/utils'
 import type { MenuSection } from '@/types/database'
 import { useTranslations } from 'next-intl'
+import { DISH_TAGS } from '@/lib/dish-guides'
 
 interface Props {
   businessId: string
@@ -22,6 +23,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState('')
   const [sectionId, setSectionId] = useState('')
+  const [dishTags, setDishTags] = useState<string[]>([])
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -65,6 +67,7 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
           price: price ? parseFloat(price) : null,
           image_path,
           sort_order: 0,
+          dish_tags: dishTags,
         })
 
       if (insertError) throw insertError
@@ -154,6 +157,34 @@ export default function AddItemForm({ businessId, userId, sections }: Props) {
             </select>
           </div>
         )}
+      </div>
+
+      {/* Dish Tags */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Dish Tags <span className="text-xs text-gray-400 font-normal">(helps customers filter and find your dish)</span>
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {DISH_TAGS.map(tag => {
+            const active = dishTags.includes(tag.value)
+            return (
+              <button
+                key={tag.value}
+                type="button"
+                onClick={() => setDishTags(prev =>
+                  active ? prev.filter(t => t !== tag.value) : [...prev, tag.value]
+                )}
+                className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${
+                  active
+                    ? 'bg-teal-600 text-white border-teal-600'
+                    : 'bg-white text-gray-600 border-gray-200 hover:border-teal-300'
+                }`}
+              >
+                {tag.emoji} {tag.label}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       <div className="pt-2">

@@ -16,6 +16,9 @@ export default async function HomePage() {
             <span className="text-teal-600">Optio</span>Menu
           </span>
           <div className="flex items-center gap-3">
+            <Link href="/rankings" className="text-sm text-gray-500 hover:text-teal-600 font-medium hidden sm:inline">
+              🏆 Rankings
+            </Link>
             <Link href="/login" className="text-sm text-gray-500 hover:text-gray-900">
               {t('nav.signIn')}
             </Link>

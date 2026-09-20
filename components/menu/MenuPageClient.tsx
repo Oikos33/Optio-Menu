@@ -16,6 +16,7 @@ import TableSessionBanner from './TableSessionBanner'
 import DishIntelCard from './DishIntelCard'
 import DietaryFilter from './DietaryFilter'
 import WhatsHotBanner from './WhatsHotBanner'
+import DishRatingRow from './DishRatingRow'
 
 const LOCALES: Record<string, string> = {
   en: 'English', ja: '日本語', zh: '中文', ko: '한국어',
@@ -244,6 +245,7 @@ export default function MenuPageClient({ business }: Props) {
                     item={item}
                     locale={locale}
                     supabase={supabase}
+                    businessId={business.id}
                     qtyInCart={getQtyInCart(item.id)}
                     onAddToCart={() => addToCart(item)}
                     onUpdateQty={(delta) => updateQty(item.id, delta)}
@@ -271,6 +273,7 @@ export default function MenuPageClient({ business }: Props) {
                     item={item}
                     locale={locale}
                     supabase={supabase}
+                    businessId={business.id}
                     qtyInCart={getQtyInCart(item.id)}
                     onAddToCart={() => addToCart(item)}
                     onUpdateQty={(delta) => updateQty(item.id, delta)}
@@ -335,7 +338,7 @@ export default function MenuPageClient({ business }: Props) {
 // ── ITEM CARD ─────────────────────────────────────────────
 
 function ItemCard({
-  item, locale, supabase, qtyInCart, onAddToCart, onUpdateQty,
+  item, locale, supabase, qtyInCart, onAddToCart, onUpdateQty, businessId,
 }: {
   item: any
   locale: string
@@ -343,6 +346,7 @@ function ItemCard({
   qtyInCart: number
   onAddToCart: () => void
   onUpdateQty: (delta: number) => void
+  businessId: string
 }) {
   const [showComments, setShowComments] = useState(false)
   const [comments, setComments] = useState<MenuItemComment[]>(
@@ -426,6 +430,13 @@ function ItemCard({
             <span className="flex-shrink-0 text-sm font-bold text-teal-600">{price}</span>
           )}
         </div>
+
+        {/* Rating row */}
+        <DishRatingRow
+          menuItemId={item.id}
+          businessId={businessId}
+          itemName={name}
+        />
         {description && (
           <p className="mt-1 text-xs text-gray-500 line-clamp-2">{description}</p>
         )}
