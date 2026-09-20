@@ -13,6 +13,9 @@ import MapSection from './MapSection'
 import CartDrawer from './CartDrawer'
 import OrderConfirmation from './OrderConfirmation'
 import TableSessionBanner from './TableSessionBanner'
+import DishIntelCard from './DishIntelCard'
+import DietaryFilter from './DietaryFilter'
+import WhatsHotBanner from './WhatsHotBanner'
 
 const LOCALES: Record<string, string> = {
   en: 'English', ja: '日本語', zh: '中文', ko: '한국어',
@@ -38,6 +41,19 @@ export default function MenuPageClient({ business }: Props) {
   // Cart state
   const [cart, setCart] = useState<CartItem[]>([])
   const [tableName, setTableName] = useState<string | null>(null)
+
+  // Dietary filter
+  const [dietaryFilter, setDietaryFilter] = useState<string | null>(null)
+
+  // Collect all unique tags across all items for the filter bar
+  const allItems = [
+    ...business.menu_sections.flatMap((s: any) => s.menu_items),
+    ...business.unsectioned_items,
+  ]
+  const allTags = Array.from(new Set(allItems.flatMap((item: any) => item.dish_tags ?? [])))
+
+  const itemMatchesFilter = (item: any) =>
+    !dietaryFilter || (item.dish_tags ?? []).includes(dietaryFilter)
 
   // After order placed
   const [placedOrderId, setPlacedOrderId] = useState<string | null>(null)
@@ -194,6 +210,20 @@ export default function MenuPageClient({ business }: Props) {
           />
         )}
 
+        {/* ── WHAT'S HOT ────────────────────────────────── */}
+        <WhatsHotBanner businessId={business.id} />
+
+        {/* ── DIETARY FILTER ────────────────────────────── */}
+        {allTags.length > 0 && (
+          <div className="mt-3">
+            <DietaryFilter
+              availableTags={allTags}
+              activeFilter={dietaryFilter}
+              onChange={setDietaryFilter}
+            />
+          </div>
+        )}
+
         {/* ── SECTIONED ITEMS ───────────────────────────── */}
         {business.menu_sections.map(section => (
           <section
@@ -207,6 +237,7 @@ export default function MenuPageClient({ business }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {section.menu_items
                 .sort((a: any, b: any) => a.sort_order - b.sort_order)
+                .filter((item: any) => itemMatchesFilter(item))
                 .map((item: any) => (
                   <ItemCard
                     key={item.id}
@@ -223,7 +254,7 @@ export default function MenuPageClient({ business }: Props) {
         ))}
 
         {/* ── UNSECTIONED ITEMS ─────────────────────────── */}
-        {business.unsectioned_items.length > 0 && (
+        {business.unsectioned_items.filter((item: any) => itemMatchesFilter(item)).length > 0 && (
           <section id="section-unsorted" className="mt-6 scroll-mt-20">
             {business.menu_sections.length > 0 && (
               <h2 className="text-base font-bold text-gray-800 mb-3 pb-1 border-b border-gray-100">
@@ -233,6 +264,7 @@ export default function MenuPageClient({ business }: Props) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {business.unsectioned_items
                 .sort((a, b) => a.sort_order - b.sort_order)
+                .filter((item: any) => itemMatchesFilter(item))
                 .map((item: any) => (
                   <ItemCard
                     key={item.id}
@@ -397,6 +429,20 @@ function ItemCard({
         {description && (
           <p className="mt-1 text-xs text-gray-500 line-clamp-2">{description}</p>
         )}
+
+        {/* Dish Intelligence Card — tags + expandable story/how-to/tips */}
+        <DishIntelCard
+          dish={{
+            dish_story: item.dish_story,
+            how_to_eat: item.how_to_eat,
+            insider_tips: item.insider_tips,
+            video_url: item.video_url,
+            dish_tags: item.dish_tags,
+            available_seasons: item.available_seasons,
+            name_en: getTranslation(item.name, 'en') || name,
+          }}
+          locale={locale}
+        />
 
         {/* Add to Cart button */}
         <div className="mt-3">
