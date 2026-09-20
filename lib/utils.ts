@@ -36,7 +36,9 @@ export function getImageUrl(
 ): string {
   if (!path) return '/placeholder-dish.webp'
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL
-  return `${base}/storage/v1/object/public/${path}`
+  // All images are stored in the 'menu-items' bucket.
+  // Stored paths do NOT include the bucket prefix, so we add it here.
+  return `${base}/storage/v1/object/public/menu-items/${path}`
 }
 
 /**
