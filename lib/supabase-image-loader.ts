@@ -1,25 +1,15 @@
 // Supabase Storage image loader for next/image
-// Automatically transforms images via Supabase's CDN
+// Uses standard public storage URLs (works on all Supabase plans)
 export default function supabaseLoader({
   src,
-  width,
-  quality,
 }: {
   src: string
   width: number
   quality?: number
 }) {
-  // If it's already a full URL (external), return as-is
-  if (src.startsWith('http')) return src
+  // If it's already a full URL (external image or placeholder), return as-is
+  if (src.startsWith('http') || src.startsWith('/')) return src
 
-  // If it's a placeholder, return as-is
-  if (src.startsWith('/')) return src
-
-  const params = new URLSearchParams({
-    width: String(width),
-    quality: String(quality || 80),
-    format: 'webp',
-  })
-
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/render/image/public/${src}?${params}`
+  // Build the plain public storage URL — no transforms needed
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${src}`
 }
