@@ -240,5 +240,11 @@
       "heading": "テーブルがまだありません",
       "subtitle": "最初のテーブルを追加して、注文用QRコードを生成しましょう。"
     }
+  },
+  "OrdersPage": {
+    "ordersTitle": "ライブ注文",
+    "tabMenu": "メニュー",
+    "tabTables": "テーブル",
+    "tabOrders": "注文"
   }
 }

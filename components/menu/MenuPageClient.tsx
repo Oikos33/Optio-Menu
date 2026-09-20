@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { FullBusiness, MenuItemComment } from '@/types/database'
+import type { CartItem } from '@/app/api/orders/route'
 import { getTranslation, getImageUrl, formatPrice, timeAgo } from '@/lib/utils'
 import SectionTabs from './SectionTabs'
 import FavoriteButton from './FavoriteButton'
 import MapSection from './MapSection'
+import CartDrawer from './CartDrawer'
+import OrderConfirmation from './OrderConfirmation'
 
 const LOCALES: Record<string, string> = {
   en: 'English', ja: '日本語', zh: '中文', ko: '한국어',
@@ -22,18 +26,80 @@ interface Props {
 
 export default function MenuPageClient({ business }: Props) {
   const supabase = createClient()
+  const searchParams = useSearchParams()
+  const tableToken = searchParams.get('t')
+
   const [locale, setLocale] = useState('en')
   const [activeSection, setActiveSection] = useState<string | null>(null)
   const [langOpen, setLangOpen] = useState(false)
 
-  // Collect all item IDs for realtime subscription
-  const allItems = [
-    ...business.menu_sections.flatMap(s => s.menu_items),
-    ...business.unsectioned_items,
-  ]
+  // Cart state
+  const [cart, setCart] = useState<CartItem[]>([])
+  const [tableName, setTableName] = useState<string | null>(null)
+
+  // After order placed
+  const [placedOrderId, setPlacedOrderId] = useState<string | null>(null)
+  const [placedTableName, setPlacedTableName] = useState<string | null>(null)
+
+  // Resolve table name from token
+  useEffect(() => {
+    if (!tableToken) return
+    const supabasePublic = createClient()
+    ;(supabasePublic as any)
+      .from('tables')
+      .select('name')
+      .eq('token', tableToken)
+      .eq('is_active', true)
+      .single()
+      .then(({ data }: any) => {
+        if (data) setTableName(data.name)
+      })
+  }, [tableToken])
+
+  // Cart helpers
+  const addToCart = (item: { id: string; name: any; price: number | null }) => {
+    const name = getTranslation(item.name, locale) || getTranslation(item.name, 'en') || 'Item'
+    setCart(prev => {
+      const existing = prev.find(c => c.menuItemId === item.id)
+      if (existing) {
+        return prev.map(c => c.menuItemId === item.id ? { ...c, quantity: c.quantity + 1 } : c)
+      }
+      return [...prev, { menuItemId: item.id, name, price: item.price, quantity: 1 }]
+    })
+  }
+
+  const updateQty = (menuItemId: string, delta: number) => {
+    setCart(prev =>
+      prev
+        .map(c => c.menuItemId === menuItemId ? { ...c, quantity: c.quantity + delta } : c)
+        .filter(c => c.quantity > 0)
+    )
+  }
+
+  const updateNote = (menuItemId: string, note: string) => {
+    setCart(prev => prev.map(c => c.menuItemId === menuItemId ? { ...c, notes: note } : c))
+  }
+
+  const getQtyInCart = (itemId: string) => cart.find(c => c.menuItemId === itemId)?.quantity ?? 0
+
+  const handleOrderPlaced = (orderId: string, resolvedTableName: string | null) => {
+    setPlacedOrderId(orderId)
+    setPlacedTableName(resolvedTableName ?? tableName)
+  }
+
+  // Show order confirmation screen
+  if (placedOrderId) {
+    return (
+      <OrderConfirmation
+        orderId={placedOrderId}
+        tableName={placedTableName}
+        onNewOrder={() => setPlacedOrderId(null)}
+      />
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-32">
       {/* ── STICKY HEADER ─────────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
@@ -49,11 +115,13 @@ export default function MenuPageClient({ business }: Props) {
             <h1 className="font-bold text-gray-900 text-lg leading-tight truncate">
               {business.name}
             </h1>
-            {business.business_types && (
+            {tableName ? (
+              <p className="text-xs text-teal-600 font-semibold">🪑 {tableName}</p>
+            ) : business.business_types ? (
               <p className="text-xs text-gray-400">
                 {getTranslation(business.business_types.name, locale)}
               </p>
-            )}
+            ) : null}
           </div>
 
           {/* Language switcher */}
@@ -132,6 +200,9 @@ export default function MenuPageClient({ business }: Props) {
                     item={item}
                     locale={locale}
                     supabase={supabase}
+                    qtyInCart={getQtyInCart(item.id)}
+                    onAddToCart={() => addToCart(item)}
+                    onUpdateQty={(delta) => updateQty(item.id, delta)}
                   />
                 ))}
             </div>
@@ -155,6 +226,9 @@ export default function MenuPageClient({ business }: Props) {
                     item={item}
                     locale={locale}
                     supabase={supabase}
+                    qtyInCart={getQtyInCart(item.id)}
+                    onAddToCart={() => addToCart(item)}
+                    onUpdateQty={(delta) => updateQty(item.id, delta)}
                   />
                 ))}
             </div>
@@ -193,16 +267,33 @@ export default function MenuPageClient({ business }: Props) {
           {' '}· Free QR menus
         </p>
       </main>
+
+      {/* ── CART DRAWER ───────────────────────────────────── */}
+      <CartDrawer
+        cartItems={cart}
+        tableName={tableName}
+        businessId={business.id}
+        tableToken={tableToken}
+        onUpdateQty={updateQty}
+        onUpdateNote={updateNote}
+        onClear={() => setCart([])}
+        onOrderPlaced={handleOrderPlaced}
+      />
     </div>
   )
 }
 
 // ── ITEM CARD ─────────────────────────────────────────────
 
-function ItemCard({ item, locale, supabase }: {
+function ItemCard({
+  item, locale, supabase, qtyInCart, onAddToCart, onUpdateQty,
+}: {
   item: any
   locale: string
   supabase: ReturnType<typeof createClient>
+  qtyInCart: number
+  onAddToCart: () => void
+  onUpdateQty: (delta: number) => void
 }) {
   const [showComments, setShowComments] = useState(false)
   const [comments, setComments] = useState<MenuItemComment[]>(
@@ -289,6 +380,30 @@ function ItemCard({ item, locale, supabase }: {
         {description && (
           <p className="mt-1 text-xs text-gray-500 line-clamp-2">{description}</p>
         )}
+
+        {/* Add to Cart button */}
+        <div className="mt-3">
+          {qtyInCart === 0 ? (
+            <button
+              onClick={onAddToCart}
+              className="w-full bg-teal-600 text-white text-xs font-semibold py-2 rounded-xl hover:bg-teal-700 active:scale-95 transition-all"
+            >
+              + Add to cart
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => onUpdateQty(-1)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-700 font-bold"
+              >−</button>
+              <span className="flex-1 text-center text-sm font-bold text-teal-600">{qtyInCart} in cart</span>
+              <button
+                onClick={() => onUpdateQty(1)}
+                className="w-8 h-8 rounded-full bg-teal-100 hover:bg-teal-200 flex items-center justify-center text-teal-700 font-bold"
+              >+</button>
+            </div>
+          )}
+        </div>
 
         {/* Comment toggle */}
         <button

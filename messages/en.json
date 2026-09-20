@@ -240,5 +240,11 @@
       "heading": "No tables yet",
       "subtitle": "Add your first table to generate a QR code for ordering."
     }
+  },
+  "OrdersPage": {
+    "ordersTitle": "Live Orders",
+    "tabMenu": "Menu",
+    "tabTables": "Tables",
+    "tabOrders": "Orders"
   }
 }
