@@ -66,20 +66,30 @@ CREATE POLICY "admins_can_update_messages"
 
 -- ── Analytics helper view: daily revenue ─────────────────────────────────────
 CREATE OR REPLACE VIEW business_daily_revenue AS
+WITH order_totals AS (
+  SELECT
+    o.id,
+    o.business_id,
+    date_trunc('day', o.created_at)::date   AS day,
+    COALESCE(o.tip_amount, 0)               AS tip,
+    COALESCE(SUM(oi.price * oi.quantity), 0) AS items_total
+  FROM orders o
+  LEFT JOIN order_items oi ON oi.order_id = o.id
+  WHERE o.status NOT IN ('cancelled')
+  GROUP BY o.id, o.business_id, day, o.tip_amount
+)
 SELECT
-  o.business_id,
-  date_trunc('day', o.created_at)::date AS day,
-  COUNT(DISTINCT o.id)                   AS order_count,
-  COALESCE(SUM(oi.price * oi.quantity), 0) + COALESCE(SUM(DISTINCT o.tip_amount), 0) AS revenue
-FROM orders o
-JOIN order_items oi ON oi.order_id = o.id
-WHERE o.status NOT IN ('cancelled')
-GROUP BY o.business_id, date_trunc('day', o.created_at)::date;
+  business_id,
+  day,
+  COUNT(*)               AS order_count,
+  SUM(items_total + tip) AS revenue
+FROM order_totals
+GROUP BY business_id, day;
 
 -- ── Analytics helper view: dish popularity ───────────────────────────────────
 CREATE OR REPLACE VIEW dish_popularity AS
 SELECT
-  oi.business_id,
+  o.business_id,
   oi.name                               AS dish_name,
   COUNT(*)                              AS order_count,
   COALESCE(SUM(oi.quantity), 0)         AS total_qty,
@@ -87,7 +97,7 @@ SELECT
 FROM order_items oi
 JOIN orders o ON o.id = oi.order_id
 WHERE o.status NOT IN ('cancelled')
-GROUP BY oi.business_id, oi.name;
+GROUP BY o.business_id, oi.name;
 
 -- Grant read access to authenticated users
 GRANT SELECT ON business_daily_revenue TO authenticated;

@@ -10,9 +10,10 @@ import { useTranslations } from 'next-intl'
 interface Props {
   error?: string
   redirectTo?: string
+  locale?: string
 }
 
-export default function LoginClient({ error: initialError, redirectTo = '/dashboard' }: Props) {
+export default function LoginClient({ error: initialError, redirectTo, locale = 'en' }: Props) {
   const supabase = createClient()
   const router = useRouter()
   const t = useTranslations('LoginPage')
@@ -21,11 +22,16 @@ export default function LoginClient({ error: initialError, redirectTo = '/dashbo
   const [error, setError] = useState(initialError || '')
   const [loading, setLoading] = useState(false)
 
+  // Resolve the post-login destination:
+  // - If redirectTo is already an absolute path (e.g. /en/admin), use it directly via window.location
+  // - Otherwise fall back to the dashboard for the current locale
+  const destination = redirectTo ?? `/${locale}/dashboard`
+
   const signInWithGoogle = async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${location.origin}/auth/callback?next=${redirectTo}`,
+        redirectTo: `${location.origin}/auth/callback?next=${destination}`,
       },
     })
   }
@@ -39,8 +45,8 @@ export default function LoginClient({ error: initialError, redirectTo = '/dashbo
       setError(error.message)
       setLoading(false)
     } else {
-      router.push(redirectTo)
-      router.refresh()
+      // Use window.location to avoid next-intl double-prefixing the locale
+      window.location.href = destination
     }
   }
 
