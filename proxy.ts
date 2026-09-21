@@ -6,16 +6,25 @@ import { updateSession } from './lib/supabase/middleware'
 const intlMiddleware = createMiddleware(routing)
 
 export async function proxy(request: NextRequest) {
-  // Run Supabase session refresh + auth guards first
+  // 1. Run Supabase session refresh + auth guards
   const supabaseResponse = await updateSession(request)
 
-  // If Supabase middleware redirected (e.g. unauthenticated admin access), honour it
+  // 2. If Supabase redirected (unauthenticated admin/dashboard access), honour it
   if (supabaseResponse.status !== 200) {
     return supabaseResponse
   }
 
-  // Otherwise run next-intl locale handling
-  return intlMiddleware(request)
+  // 3. Run next-intl locale routing
+  const intlResponse = intlMiddleware(request)
+
+  // 4. CRITICAL: copy any Supabase auth cookies (refreshed tokens) onto the
+  //    intl response — without this the page server components can't read
+  //    the session and requireAdmin() / auth checks silently fail.
+  supabaseResponse.cookies.getAll().forEach((cookie) => {
+    intlResponse.cookies.set(cookie.name, cookie.value, cookie as any)
+  })
+
+  return intlResponse
 }
 
 export const config = {
