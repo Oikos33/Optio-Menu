@@ -84,6 +84,12 @@ export default async function CombosPage({ params }: Props) {
             Orders
           </Link>
           <Link
+            href={`/dashboard/businesses/${id}/reservations`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
+          >
+            📅 Reservations
+          </Link>
+          <Link
             href={`/dashboard/businesses/${id}/kds`}
             className="text-sm font-medium text-gray-500 hover:text-gray-900 px-4 py-2 border-b-2 border-transparent hover:border-gray-300 transition-colors whitespace-nowrap"
           >

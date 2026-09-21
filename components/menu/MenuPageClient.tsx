@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
+import { Link } from '@/i18n/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { FullBusiness, MenuItemComment } from '@/types/database'
 import type { CartItem } from '@/app/api/orders/route'
@@ -205,6 +206,15 @@ export default function MenuPageClient({ business }: Props) {
           </p>
         )}
 
+        {/* ── RESERVE A TABLE CTA ──────────────────────────── */}
+        <div className="mb-4">
+          <Link
+            href={`/reserve/${business.slug}`}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-teal-600 border border-teal-200 hover:bg-teal-50 px-4 py-2 rounded-xl transition-colors"
+          >
+            📅 Reserve a table
+          </Link>
+        </div>
 
         {/* ── SECTION TABS ──────────────────────────────── */}
         {business.menu_sections.length > 0 && (

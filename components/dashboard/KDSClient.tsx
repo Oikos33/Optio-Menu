@@ -345,6 +345,12 @@ export default function KDSClient({ businessId, businessName, kdsPin, initialOrd
           >
             Orders
           </Link>
+          <Link
+            href={`/dashboard/businesses/${businessId}/reservations`}
+            className="text-sm font-medium text-gray-500 hover:text-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            📅 Reservations
+          </Link>
           <span className="text-sm font-semibold text-teal-400 px-3 py-1.5 rounded-lg bg-gray-800">
             KDS
           </span>
