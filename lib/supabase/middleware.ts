@@ -29,12 +29,27 @@ export async function updateSession(request: NextRequest) {
   // Refresh session — IMPORTANT: must call getUser() to keep session alive
   const { data: { user } } = await supabase.auth.getUser()
 
+  const { pathname } = request.nextUrl
+
   // Protect dashboard routes
-  const isDashboard = request.nextUrl.pathname.includes('/dashboard')
+  const isDashboard = pathname.includes('/dashboard')
   if (isDashboard && !user) {
+    const pathParts = pathname.split('/')
+    const locale = pathParts[1] || 'en'
     const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = '/login'
-    loginUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+    loginUrl.pathname = `/${locale}/login`
+    loginUrl.searchParams.set('redirectTo', pathname)
+    return NextResponse.redirect(loginUrl)
+  }
+
+  // Protect admin routes — auth check only (role check is in the server component)
+  // Extract locale from path: /{locale}/admin/...
+  const adminMatch = pathname.match(/^\/([^/]+)\/admin(\/|$)/)
+  if (adminMatch && !user) {
+    const locale = adminMatch[1]
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = `/${locale}/login`
+    loginUrl.searchParams.set('redirectTo', pathname)
     return NextResponse.redirect(loginUrl)
   }
 

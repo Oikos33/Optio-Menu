@@ -19,6 +19,9 @@ export default async function HomePage() {
             <Link href="/rankings" className="text-sm text-gray-500 hover:text-teal-600 font-medium hidden sm:inline">
               🏆 Rankings
             </Link>
+            <Link href="/contact" className="text-sm text-gray-500 hover:text-teal-600 font-medium hidden sm:inline">
+              Contact
+            </Link>
             <Link href="/login" className="text-sm text-gray-500 hover:text-gray-900">
               {t('nav.signIn')}
             </Link>
@@ -159,6 +162,7 @@ export default async function HomePage() {
         <p className="flex items-center justify-center gap-4">
           <Link href="/privacy" className="hover:text-gray-600">{t('footer.privacyPolicy')}</Link>
           <Link href="/terms" className="hover:text-gray-600">{t('footer.termsOfService')}</Link>
+          <Link href="/contact" className="hover:text-gray-600">Contact</Link>
         </p>
       </footer>
 

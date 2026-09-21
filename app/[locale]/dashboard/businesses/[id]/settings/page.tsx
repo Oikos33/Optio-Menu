@@ -40,6 +40,7 @@ export default async function BusinessSettingsPage({ params }: Props) {
     { href: `/dashboard/businesses/${id}/orders`, label: '📦 Orders' },
     { href: `/dashboard/businesses/${id}/reservations`, label: '📅 Reservations' },
     { href: `/dashboard/businesses/${id}/kds`, label: '🍳 KDS' },
+    { href: `/dashboard/businesses/${id}/analytics`, label: '📊 Analytics' },
     { href: `/dashboard/businesses/${id}/combos`, label: '🎁 Deals' },
   ]
 

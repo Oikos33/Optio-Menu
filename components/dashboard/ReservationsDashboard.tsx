@@ -480,6 +480,9 @@ export default function ReservationsDashboard({ business, locale }: Props) {
           <Link href={`/dashboard/businesses/${id}/kds`} className={tabCls(false)}>
             🍳 KDS
           </Link>
+          <Link href={`/dashboard/businesses/${id}/analytics`} className={tabCls(false)}>
+            📊 Analytics
+          </Link>
           <Link href={`/dashboard/businesses/${id}/combos`} className={tabCls(false)}>
             🎁 Deals
           </Link>
