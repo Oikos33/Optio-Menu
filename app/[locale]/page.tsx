@@ -1,8 +1,21 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ code?: string; next?: string }>
+}) {
+  // Supabase PKCE flow sometimes sends ?code= to the site root (which next-intl
+  // then redirects to /[locale]). Catch it here and forward to the real callback.
+  const sp = await searchParams
+  if (sp?.code) {
+    const nextPath = sp.next ?? '/dashboard'
+    redirect(`/auth/callback?code=${sp.code}&next=${nextPath}`)
+  }
+
   const t = await getTranslations('HomePage')
 
   return (
