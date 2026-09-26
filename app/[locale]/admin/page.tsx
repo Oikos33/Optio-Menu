@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { setRequestLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { requireAdmin } from '@/lib/is-admin'
@@ -15,7 +15,13 @@ export default async function AdminPage({ params }: PageProps) {
 
   try {
     await requireAdmin()
-  } catch {
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : ''
+    if (msg === 'unauthenticated') {
+      // Session not readable — send to login with redirect back
+      redirect(`/${locale}/login?redirectTo=/${locale}/admin`)
+    }
+    // Logged in but not in platform_admins → 404 (route appears to not exist)
     notFound()
   }
 
